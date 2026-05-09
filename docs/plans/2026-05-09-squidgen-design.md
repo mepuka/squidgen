@@ -20,165 +20,55 @@ shares no code with it.
 
 ---
 
-## 1. The goal prompt (paste verbatim into Codex)
+## 1. The goal prompt (paste verbatim into Codex — under 4000 chars)
 
 ```
-/goal Build squidgen end-to-end: a learned-primitive squid-plate generator
-that emits plotter-friendly SVG line drawings in the style of FAO Cephalopods
-of the World scientific plates. Work through three phases without stopping
-until the test harness passes the stopping conditions.
+/goal Build squidgen at /Users/pooks/Dev/squidgen — a learned-primitive squid-plate generator emitting plotter-friendly SVG line drawings in the style of FAO Cephalopods of the World scientific plates.
 
-PRIMARY OBJECTIVE: visual fidelity to FAO plate aesthetics. Line economy,
-clean tone, sparse stipple confined to shadow envelopes, single-weight
-outlines with one shadow accent, FAO-correct primitives (concentric-ring
-suckers, almond eye + filled pupil, continuous fin-mantle silhouette).
-Anatomical proportions are a soft floor, not the primary goal.
+PRIMARY OBJECTIVE: visual fidelity to FAO plate aesthetics — line economy, sparse stipple confined to shadow envelopes, single-weight outlines with one shadow accent, concentric-ring suckers, almond eye + filled pupil, continuous fin-mantle silhouette. Anatomical proportions are a soft floor, not the primary goal.
 
-SECONDARY OBJECTIVE: anatomical plausibility — output passes ratio and
-landmark gates against FAO measurement ranges, but does not need to match a
-specific reference plate keypoint-by-keypoint.
-
-SCOPE: build the squidgen project at /Users/pooks/Dev/squidgen as a NEW
-project. The sister project at /Users/pooks/Dev/fishdraw is FROZEN — read
-freely (especially squiddraw.js, SQUID_ANATOMY_MEASUREMENTS.md, the FAO
-technique catalog at docs/research/2026-05-08-fao-technique-catalog.md, and
-i1920e.pdf), but do NOT modify any file in fishdraw and do NOT import its
-code. squidgen has its own primitive library, its own learned models, its
-own renderer.
-
-REFERENCES — read in this order before writing any code:
+READ FIRST (in order):
   1. /Users/pooks/Dev/squidgen/docs/plans/2026-05-09-squidgen-design.md
-       — this document. Contains full architecture, phase plans, primitive
-         specs, training-script specs, and test harness design.
-  2. /Users/pooks/Dev/fishdraw/SQUID_ANATOMY_MEASUREMENTS.md
-       — anatomical schema and FAO-published measurement ranges per species.
-         The landmark JSON contract uses this schema.
-  3. /Users/pooks/Dev/fishdraw/docs/research/2026-05-08-fao-technique-catalog.md
-       — exact specification of FAO drawing techniques (T1-T20). Each
-         primitive in squidgen's library implements these from day one.
-  4. /Users/pooks/Dev/fishdraw/squid_reference_images/*.png
-       — the 6 FAO-illustration screenshots already on disk. Style anchor
-         and initial annotator dataset.
-  5. /Users/pooks/Dev/fishdraw/i1920e.pdf
-       — FAO Vol. 2 source. ~600 pages. Use Read with `pages` parameter
-         (max 20 per call). Pull additional plates as needed for training
-         data.
-  6. /Users/pooks/Dev/fishdraw/docs/plans/2026-05-08-squiddraw-design.md
-       — sister project's design doc. Reference for harness conventions,
-         landmarks JSON schema, fixture file format, run.js structure.
+     — full spec: architecture (§3), Phase 0 annotator (§4), Phase 1 training (§5), Phase 2 renderer (§6), test harness (§7), stopping conditions (§8), iteration ladder (§9), bail-outs (§10), coding constraints (§11), REPORT format (§12). Everything below references this doc.
+  2. /Users/pooks/Dev/fishdraw/SQUID_ANATOMY_MEASUREMENTS.md — landmark schema, FAO measurement ranges.
+  3. /Users/pooks/Dev/fishdraw/docs/research/2026-05-08-fao-technique-catalog.md — T1-T20 FAO techniques; each primitive implements these.
+  4. /Users/pooks/Dev/fishdraw/squid_reference_images/*.png and i1920e.pdf — plate dataset; pull more from PDF as needed.
 
-POSE: vertical, arms-up. Canvas is portrait (300×500). Mantle posterior tip
-points down; arm crown points up. Match the orientation of every image in
-fishdraw/squid_reference_images/.
+SCOPE: fishdraw is FROZEN. Read freely, copy patterns (rndtri, Perlin, polyline ops); do NOT modify or import. squidgen has its own primitives, learned models, and renderer.
 
-RUNTIME: bun for JavaScript code, python 3.11 for ML training scripts. The
-runtime entrypoint `bun squidgen.js` must work parallel to fishdraw's
-`bun squiddraw.js`. Python is only used in tools/helpers/ and in
-training scripts under tools/train_*.py — at runtime, squidgen.js loads
-trained models (JSON) and renders without any Python dependency.
+RUNTIME: bun for squidgen.js + test/. python 3.11 for tools/ and tools/train_*.py. At runtime, squidgen.js loads models/*.json — no Python.
 
-INVOCATION:
-  bun squidgen.js > out.svg                           # default render
-  bun squidgen.js --species "Loligo vulgaris" > o.svg # species-conditioned
-  bun squidgen.js --measurements measurements.json    # measurement-conditioned
-  bun squidgen.js --seed "test" --landmarks lm.json   # emit landmarks
+PHASES (sequential):
 
-Format flag: --format svg|json. Speed flag for animated SMIL is out of scope
-for v1.
+  Phase 0 — Annotator. Build tools/annotate.js (Bun server + browser UI) + Python helpers (SAM 2 CoreML, OpenCV stipple/sucker/eye). Verify with `bun tools/annotate.js --self-test`. Then write "PHASE 0 COMPLETE — awaiting user annotation" to PROGRESS.md and STOP. User runs the tool, annotates ≥20 plates across ≥5 species, edits PROGRESS.md to add "ANNOTATIONS READY: <N> plates" before resuming.
 
-STYLE CONSTRAINTS:
-  - squidgen.js is single-file, no npm dependencies, runs under bun.
-  - Trained models loaded from models/*.json (small files, all under 1MB).
-  - Test harness (test/) and tools (tools/) MAY have dependencies; pick the
-    minimum. Install via `bun add` and `pip install`. Commit lockfiles.
-  - Plotter aesthetic: line-only, no fills. Filled regions (pupils,
-    photophores, beak spot) implemented via dense parallel hatch lines.
-  - Line economy is a hard rule: each primitive declares a stroke budget.
-    Compose step asserts the budget is honored.
-  - One stroke weight by default. ONE shadow-accent weight bump on a single
-    flank only. No per-region weight variation.
+  Phase 1 — Training. Run tools/train_*.py to produce models/asm.json, stipple.json, suckers.json, eyes.json, arm_silhouette.json, hatch_patches.bin. Each script cross-validates per §5.
 
-DEFINITION OF DONE — all of these must hold simultaneously:
-  - tools/annotate.js runs (Phase 0 deliverable verified by /tools/annotate.js
-    --self-test).
-  - User-provided annotations exist for >= 20 plates across >= 5 species.
-    (User does this manually after Phase 0; Codex pauses and waits.)
-  - models/asm.json, models/stipple.json, models/suckers.json,
-    models/eyes.json, models/arm_silhouette.json all exist and are loaded
-    successfully by squidgen.js.
-  - test/run.js exits 0 with these tier results:
-    * T1 throws: 100/100 random unseeded renders complete without throwing.
-    * T2 ratios: 5/5 named species fixtures pass per-species ratio gates;
-                 20/20 random renders pass generic ratio gates.
-    * T3 landmarks: 5/5 fixtures' landmark RMSE (after Procrustes) < threshold
-                    documented in run.js.
-    * T4 silhouette IoU: 5/5 fixtures' silhouette IoU >= 0.70 vs annotated
-                          reference (loose floor — visual is primary).
-    * T5 chamfer: 5/5 fixtures' chamfer distance below threshold.
-    * T6 topology: 5/5 fixtures' connected-component and hole counts within
-                   expected ranges.
-    * T7 stroke stats: 5/5 fixtures' stroke statistics within K-S bounds vs
-                       per-species reference distribution.
-    * T9 stipple density: 5/5 fixtures' stipple density profile within bounds.
-    * T10 visual judge: claude --print or codex exec scores 5/5 fixtures
-                         >= 7/10 on FAO-fidelity rubric. Cached per render hash.
+  Phase 2 — Renderer. Build squidgen.js single-file no-deps. Iterate against the 10-tier harness through the 7-rung ladder (§9) until §8 stopping conditions hold.
 
 LOOP (per phase):
   while not done:
     edit code
-    bun test/run.js                   # phase 0: validates annotator self-test
-                                       # phase 2: full 10-tier harness
-                                       # appends a line to PROGRESS.md
-    inspect out/*.png yourself         # multimodal review during the loop
-    record judgments in PROGRESS.md
+    bun test/run.js          # appends one paragraph to PROGRESS.md
+    inspect out/*.png        # multimodal self-review
     decide next change
 
-CHECKPOINT REPORTING (PROGRESS.md, append per loop turn):
-  - timestamp
-  - which phase (0, 1, 2) and which sub-task
-  - what you changed this turn
-  - test tier pass/fail summary
-  - what you plan to change next
+PROGRESS.md per turn: timestamp, phase + sub-task, what changed, tier pass/fail, what's next. One tight paragraph; no narration.
 
-PHASE GATING — these are sequential, not parallel:
+DEFINITION OF DONE (full list §8):
+  - tools/annotate.js --self-test passes
+  - User signaled ANNOTATIONS READY
+  - All models/*.json exist and load
+  - test/run.js exits 0: T1 100/100 throws, T2 5/5+20/20 ratios, T3-T9 5/5 fixtures, T10 (claude --print or codex exec) ≥7/10 informational
 
-  Phase 0 (annotator):
-    Build tools/annotate.js (Bun server + browser UI) and Python helpers.
-    Self-test: spawn the server, hit /healthz, verify SAM 2 helper loads,
-    verify OpenCV helpers run on a test image, verify JSON schemas validate.
-    On Phase 0 done, Codex writes PROGRESS.md "PHASE 0 COMPLETE — awaiting
-    user annotation" and STOPS until the user signals annotation is ready.
-    The user annotates 20+ plates manually using the tool. They then
-    invoke Codex again (e.g. by editing PROGRESS.md to add "ANNOTATIONS
-    READY" or via direct prompt) to resume.
+BAIL-OUTS:
+  - Phase 0 component fails self-test 3× → stub, continue, flag.
+  - Phase 1 training fails CV 3× → ship simpler model, flag.
+  - Phase 2 same rung failing 5× → skip rung, flag.
+  - Wall-clock 12h → stop, emit REPORT.md.
+  - 100 random renders threw ≥5 → halt; correctness regression.
 
-  Phase 1 (training):
-    Build training scripts under tools/train_*.py. Run each, validate output
-    JSON schemas. Each training script self-validates with held-out
-    cross-validation. On Phase 1 done, models/*.json all present, Codex
-    proceeds directly to Phase 2.
-
-  Phase 2 (renderer):
-    Build squidgen.js as the runtime. Iterate against the test harness until
-    stopping conditions met. This is the longest phase.
-
-BAIL-OUT RULES (do not loop forever):
-  - Phase 0: if annotator self-test fails for 3 consecutive iterations on
-    the same component, log the failure and continue with that component
-    stubbed; flag in REPORT.md. (Manual annotation can fall back to a
-    simpler tool — point-clicker only — if SAM 2 / OpenCV helpers are
-    flaky.)
-  - Phase 1: if a training script fails cross-validation 3 times, ship a
-    simpler model (e.g. mean-only ASM, single Gaussian stipple) and flag
-    in REPORT.md.
-  - Phase 2: same rung failing for 5 consecutive iterations → log "stuck
-    on rung N" in PROGRESS.md, skip rung, flag in REPORT.md.
-  - Total wall-clock past 12 hours of active Codex work → stop and write
-    REPORT.md regardless.
-  - 100 random renders threw at least 5 times → halt; correctness
-    regression, do not paper over.
-
-TONE: each PROGRESS.md entry is one tight paragraph. Don't narrate.
+When stopping, emit REPORT.md per design doc §12.
 ```
 
 ---

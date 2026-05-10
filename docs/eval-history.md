@@ -25,6 +25,7 @@ contact sheets because those contain source/reference imagery.
 | 14 | 20260510T071849Z | 4.00 | 3 | 5.33 | 3 | Kept ridge layer only for dark/pure-white backgrounds; best clean pass so far. |
 | 15 | 20260510T072427Z | 3.33 | 2 | 4.33 | 3 | Tested larger eyes/rings and changed draw order; regressed, settings not kept. |
 | 16 | 20260510T073346Z | 3.33 | 3 | 4.67 | 3 | Tested sparse interior detail; cleaner preview but lower judged style, settings not kept. |
+| 17 | 20260510T073841Z | 3.67 | 2 | 4.33 | 3 | Tested wider sucker-ring detection; added too many mantle rings, settings not kept. |
 
 ## Iteration 1
 
@@ -121,3 +122,9 @@ contact sheets because those contain source/reference imagery.
 - [loligo_01.svg](../out/eval/0016-20260510T073346Z/loligo_01.svg) · [png](../out/eval/0016-20260510T073346Z/loligo_01.png) · [judge](../out/eval/0016-20260510T073346Z/loligo_01.judge.json)
 - [loligo_02_isolated.svg](../out/eval/0016-20260510T073346Z/loligo_02_isolated.svg) · [png](../out/eval/0016-20260510T073346Z/loligo_02_isolated.png) · [judge](../out/eval/0016-20260510T073346Z/loligo_02_isolated.judge.json)
 - [loligo_03.svg](../out/eval/0016-20260510T073346Z/loligo_03.svg) · [png](../out/eval/0016-20260510T073346Z/loligo_03.png) · [judge](../out/eval/0016-20260510T073346Z/loligo_03.judge.json)
+
+## Iteration 17
+
+- [loligo_01.svg](../out/eval/0017-20260510T073841Z/loligo_01.svg) · [png](../out/eval/0017-20260510T073841Z/loligo_01.png) · [judge](../out/eval/0017-20260510T073841Z/loligo_01.judge.json)
+- [loligo_02_isolated.svg](../out/eval/0017-20260510T073841Z/loligo_02_isolated.svg) · [png](../out/eval/0017-20260510T073841Z/loligo_02_isolated.png) · [judge](../out/eval/0017-20260510T073841Z/loligo_02_isolated.judge.json)
+- [loligo_03.svg](../out/eval/0017-20260510T073841Z/loligo_03.svg) · [png](../out/eval/0017-20260510T073841Z/loligo_03.png) · [judge](../out/eval/0017-20260510T073841Z/loligo_03.judge.json)

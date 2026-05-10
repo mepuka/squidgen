@@ -1,0 +1,17 @@
+{
+  "anatomy": 2,
+  "linework": 3,
+  "notes": "Output reads as raw photo-edge tracing of multiple squid mantles with no arms/tentacles, no recognisable head, and no FAO plate restraint.",
+  "silhouette_match": 3,
+  "specific_issues": [
+    "arms and tentacles entirely missing on all three squid",
+    "heads/funnels not rendered \u2014 only blunt mantle ends",
+    "eyes are tiny dots placed arbitrarily, not almond-shaped or anatomically positioned",
+    "retains photo composition (multiple stacked squid) instead of isolating a single specimen as FAO plates do",
+    "interior is noisy disconnected edge fragments rather than coherent stipple/chromatophore field",
+    "fin outlines absent or merged into mantle silhouette",
+    "no ring-suckers, no hectocotylus, no scientific-plate detailing",
+    "linework appears auto-traced from photo highlights rather than drawn"
+  ],
+  "style_fidelity": 2
+}

@@ -1,0 +1,16 @@
+{
+  "anatomy": 4,
+  "linework": 4,
+  "notes": "Recognisably the same posed squid with correct mantle/fin/arm layout, but the two long extended tentacles are merged into the silhouette and the linework is ragged with noisy scattered stipple.",
+  "silhouette_match": 6,
+  "specific_issues": [
+    "upper long tentacle merged into mantle outline rather than drawn as a separate appendage",
+    "lower long tentacle missing or fused with arm cluster",
+    "silhouette contour broken and jittery along mantle and fin edges",
+    "stipple scattered randomly instead of concentrated in chromatophore fields visible in the photo",
+    "arm count unclear \u2014 hard to read 8 arms + 2 tentacles",
+    "sucker rings only sporadically indicated",
+    "small fragmentary line noise inside body reads as photo-trace artifact rather than scientific restraint"
+  ],
+  "style_fidelity": 5
+}

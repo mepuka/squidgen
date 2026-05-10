@@ -1,0 +1,18 @@
+{
+  "anatomy": 2,
+  "linework": 3,
+  "notes": "Output captures rough mantle silhouettes of three of the photo's squids but is essentially an edge-detection trace with broken fragments instead of clean FAO ink work, and arms/tentacles are largely missing.",
+  "silhouette_match": 5,
+  "specific_issues": [
+    "arms and tentacles almost entirely missing from all squids",
+    "linework is fragmented edge-trace clutter, not continuous single-weight ink",
+    "no organized stipple \u2014 just disconnected noise marks where chromatophores/shadows are",
+    "eyes are tiny dots without proper almond shape",
+    "fin geometry barely indicated, fin-mantle junction unclear",
+    "photo contains 4\u20135 squids but output only renders 3 mantles",
+    "broken silhouette \u2014 outline drops out in places along mantle edges",
+    "reads as photo edge-filter output rather than a scientific cephalopod plate",
+    "no hectocotylus, sucker rings, or any anatomical detail expected of FAO style"
+  ],
+  "style_fidelity": 2
+}

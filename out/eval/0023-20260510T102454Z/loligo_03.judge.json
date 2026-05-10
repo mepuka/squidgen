@@ -1,0 +1,17 @@
+{
+  "anatomy": 3,
+  "linework": 3,
+  "notes": "Two-view layout matches the input photo's dorsal/lateral arrangement, but the linework is photo-trace clutter rather than clean FAO ink, and individual arms/tentacles are fused into blob silhouettes.",
+  "silhouette_match": 6,
+  "specific_issues": [
+    "broken, jittery contour lines instead of clean single-weight ink",
+    "arms and tentacles merged into undifferentiated blob shapes rather than 8 arms + 2 longer tentacles",
+    "tentacular clubs in the dorsal view collapsed into a forked lump",
+    "no ring suckers along the arms",
+    "stipple is sparse and randomly scattered, not concentrated in the photo's chromatophore/shadow fields",
+    "interior detail consists of broken squiggle fragments that read as photo-trace noise",
+    "lateral-view eye present but dorsal-view eye markings (the two dark spots in the photo) are missing",
+    "fin-mantle junction in the dorsal view is jagged rather than a clean continuous silhouette"
+  ],
+  "style_fidelity": 3
+}

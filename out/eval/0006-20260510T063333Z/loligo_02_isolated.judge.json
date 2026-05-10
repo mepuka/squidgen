@@ -1,0 +1,17 @@
+{
+  "anatomy": 2,
+  "linework": 3,
+  "notes": "Output is a fragmented edge-detection trace of mantle outlines with no rendered heads, eyes, arms or tentacles, failing to read as an FAO scientific plate.",
+  "silhouette_match": 3,
+  "specific_issues": [
+    "heads and eyes entirely missing from all squid",
+    "no arms or tentacles drawn",
+    "no ring suckers",
+    "mantle outlines broken and fragmented",
+    "interior marks are noisy edge-detection artifacts rather than purposeful stipple",
+    "fins not articulated as continuous shapes",
+    "looks like raw photo-traced edges, not scientific linework",
+    "multiple squid in input but anatomy collapsed into stacked mantle blobs"
+  ],
+  "style_fidelity": 3
+}

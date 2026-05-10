@@ -1,0 +1,17 @@
+{
+  "anatomy": 4,
+  "linework": 5,
+  "notes": "Edge-traced outline captures the mantle and a vague arm cluster but loses the two long tentacles and most of the splayed arm anatomy from the photo, reading as a generic squid rather than this specific specimen.",
+  "silhouette_match": 4,
+  "specific_issues": [
+    "both long tentacles from the photo are missing entirely",
+    "splayed arm crown reduced to a vague lobed mass instead of distinct arms with suckers",
+    "no almond eye with pupil placed where the photo's eye sits",
+    "stipple is uniform random noise rather than concentrated chromatophore fields matching the photo",
+    "mantle outline is a smoothed envelope that ignores the photo's translucent fin edges",
+    "fins read as part of the mantle silhouette rather than separate fin lobes",
+    "no ring suckers along arms",
+    "overall reads as photo-trace of an alpha mask, not a scientific plate"
+  ],
+  "style_fidelity": 4
+}

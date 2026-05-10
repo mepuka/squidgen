@@ -65,12 +65,13 @@ def vectorize_fao(
     svg_path: Path,
     *,
     profile_name: str | None = None,
+    source_rgb: Image.Image | None = None,
 ) -> int:
     """Write an FAO-style scientific plate SVG. Returns mark count."""
     from imgvec.fao import render_fao_svg
 
     profile = get_profile(profile_name)
-    drawing = render_fao_svg(rgba, svg_path, profile)
+    drawing = render_fao_svg(rgba, svg_path, profile, source_rgb=source_rgb)
     return drawing.mark_count
 
 
@@ -136,6 +137,7 @@ def run(
         flat = raw.convert("RGB")
         cutout_path = None
     else:
+        raw = Image.open(input_path)
         rgba = segment(input_path)
         flat = flatten_on_white(rgba)
         cutout_path = output_path.with_suffix(".cutout.png")
@@ -145,7 +147,7 @@ def run(
     flat.save(flat_path)
 
     if active_profile is not None:
-        strokes = vectorize_fao(rgba, output_path, profile_name=active_profile.name)
+        strokes = vectorize_fao(rgba, output_path, profile_name=active_profile.name, source_rgb=raw.convert("RGB"))
     else:
         strokes = vectorize(
             flat_path,

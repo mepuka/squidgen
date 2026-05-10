@@ -15,6 +15,9 @@ out/
 !out/eval/*/*.svg
 !out/eval/*/*.png
 !out/eval/*/*.judge.json
+out/baseline/
+out/sanity/
+out/self-test/
 out/eval/*/*.cutout.png
 out/eval/*/*.flat.png
 out/eval/*/*.preview.png

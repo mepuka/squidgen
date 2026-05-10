@@ -20,6 +20,7 @@ from imgvec.profiles import Profile
 
 
 Point = tuple[float, float]
+LineLayer = tuple[str, list[list[Point]]]
 
 
 @dataclass
@@ -30,12 +31,14 @@ class SvgDrawing:
     dots: list[tuple[float, float, float]]
     rings: list[tuple[float, float, float]]
     filled_circles: list[tuple[float, float, float]]
+    line_layers: list[LineLayer] | None = None
     filled_paths: list[str] | None = None
 
     @property
     def mark_count(self) -> int:
+        line_count = sum(len(lines) for _, lines in self.line_layers) if self.line_layers else len(self.polylines)
         return (
-            len(self.polylines)
+            line_count
             + len(self.dots)
             + len(self.rings) * 2
             + len(self.filled_circles)
@@ -62,25 +65,40 @@ def render_fao_svg(
     rgb = plate["rgb"]
     offset = float(profile.page_pad)
     height, width = mask.shape
+    subject_masks = _split_subject_masks(mask)
 
-    polylines: list[list[Point]] = []
-    polylines.extend(_silhouette_lines(mask, profile))
-    polylines.extend(_interior_edge_lines(rgb, mask, profile))
+    outline_lines = [line for subject_mask in subject_masks for line in _silhouette_lines(subject_mask, profile)]
+    appendage_lines = _appendage_centerlines(mask, profile)
+    detail_lines = _interior_edge_lines(rgb, mask, profile)
+    line_layers = [
+        ("outline", _sort_polylines(outline_lines)),
+        ("appendage-centerlines", _sort_polylines(appendage_lines)),
+        ("photo-detail", _sort_polylines(detail_lines)),
+    ]
     if profile.draw_centerline:
-        polylines.extend(_body_centerline(mask, profile))
+        line_layers.append(("body-centerline", _body_centerline(mask, profile)))
     if profile.draw_eye:
-        polylines.extend(_eye_lines(rgb, mask, profile))
+        line_layers.append(("eye-outline", [line for subject_mask in subject_masks for line in _eye_lines(rgb, subject_mask, profile)]))
 
     dots = _stipple_dots(rgb, mask, profile)
     rings = _sucker_rings(rgb, mask, profile)
-    filled_circles = _eye_pupils(rgb, mask, profile)
+    filled_circles = [pupil for subject_mask in subject_masks for pupil in _eye_pupils(rgb, subject_mask, profile)]
 
     drawing = SvgDrawing(
         width=float(width + profile.page_pad * 2),
         height=float(height + profile.page_pad * 2),
-        polylines=[_offset_line(line, offset, offset) for line in polylines],
-        dots=[(x + offset, y + offset, r) for x, y, r in dots],
-        rings=[(x + offset, y + offset, r) for x, y, r in rings],
+        polylines=[
+            _offset_line(line, offset, offset)
+            for _, lines in line_layers
+            for line in lines
+        ],
+        line_layers=[
+            (name, [_offset_line(line, offset, offset) for line in lines])
+            for name, lines in line_layers
+            if lines
+        ],
+        dots=_sort_circles([(x + offset, y + offset, r) for x, y, r in dots]),
+        rings=_sort_circles([(x + offset, y + offset, r) for x, y, r in rings]),
         filled_circles=[(x + offset, y + offset, r) for x, y, r in filled_circles],
     )
     svg_path.write_text(_svg_text(drawing, profile), encoding="utf-8")
@@ -125,12 +143,34 @@ def _prepare_plate(
     source = source.resize((width, profile.height), Image.Resampling.LANCZOS)
 
     alpha = np.array(rgba.getchannel("A"))
-    mask = (alpha > 18).astype(np.uint8)
+    alpha_mask = (alpha > 18).astype(np.uint8)
+    source_array = np.array(source)
+    bg_gray = _border_gray(source_array)
+    if source_rgb is not None and bg_gray < 90.0:
+        mask = _repair_mask_from_photo(source_array, alpha_mask)
+        rgb = source_array
+    else:
+        mask = alpha_mask
+        rgb = np.array(flatten_rgba(rgba))
     mask = _keep_large_components(mask, min_area=45)
 
-    rgb = np.array(flatten_rgba(rgba))
     rgb[mask == 0] = 255
     return {"rgb": rgb, "mask": mask}
+
+
+def _border_gray(rgb: np.ndarray) -> float:
+    height, width = rgb.shape[:2]
+    border = max(3, int(min(height, width) * 0.035))
+    samples = np.concatenate(
+        [
+            rgb[:border, :, :].reshape(-1, 3),
+            rgb[-border:, :, :].reshape(-1, 3),
+            rgb[:, :border, :].reshape(-1, 3),
+            rgb[:, -border:, :].reshape(-1, 3),
+        ],
+        axis=0,
+    )
+    return float(np.mean(np.median(samples.astype(np.float32), axis=0)))
 
 
 def _repair_mask_from_photo(rgb: np.ndarray, alpha_mask: np.ndarray) -> np.ndarray:
@@ -233,6 +273,73 @@ def _silhouette_lines(mask: np.ndarray, profile: Profile) -> list[list[Point]]:
     return lines
 
 
+def _split_subject_masks(mask: np.ndarray) -> list[np.ndarray]:
+    count, labels, stats, _ = cv2.connectedComponentsWithStats(mask.astype(np.uint8), 8)
+    subjects: list[np.ndarray] = []
+    for label in range(1, count):
+        area = int(stats[label, cv2.CC_STAT_AREA])
+        if area < 45:
+            continue
+        x, y, w, h = [int(v) for v in stats[label, :4]]
+        component = (labels[y : y + h, x : x + w] == label).astype(np.uint8)
+        split_rows = _projection_split_rows(component, y)
+        if not split_rows:
+            out = np.zeros_like(mask)
+            out[y : y + h, x : x + w] = component
+            subjects.append(out)
+            continue
+
+        bounds = [y, *split_rows, y + h]
+        for top, bottom in zip(bounds, bounds[1:]):
+            if bottom - top < max(24, h * 0.12):
+                continue
+            out = np.zeros_like(mask)
+            local_top = max(0, top - y)
+            local_bottom = min(h, bottom - y)
+            band = component[local_top:local_bottom]
+            if int(band.sum()) < max(180, area * 0.10):
+                continue
+            out[top:bottom, x : x + w] = band
+            subjects.append(out)
+
+    return subjects or [mask]
+
+
+def _projection_split_rows(component: np.ndarray, y_offset: int) -> list[int]:
+    h, w = component.shape
+    if h < 180 or w < 420:
+        return []
+    rows = component.sum(axis=1).astype(np.float32)
+    if float(rows.max()) < w * 0.38:
+        return []
+    kernel = max(17, (h // 12) | 1)
+    smooth = cv2.GaussianBlur(rows.reshape(-1, 1), (1, kernel), 0).ravel()
+    peak = float(smooth.max())
+    if peak <= 0:
+        return []
+
+    minima: list[tuple[int, float]] = []
+    for idx in range(1, h - 1):
+        if smooth[idx] < smooth[idx - 1] and smooth[idx] < smooth[idx + 1]:
+            ratio = float(smooth[idx] / peak)
+            if 0.45 <= ratio <= 0.88:
+                minima.append((idx, ratio))
+    if not minima:
+        return []
+
+    chosen: list[int] = []
+    min_gap = max(80, int(h * 0.16))
+    for idx, _ratio in sorted(minima, key=lambda item: item[1]):
+        if idx < h * 0.16 or idx > h * 0.90:
+            continue
+        if all(abs(idx - existing) >= min_gap for existing in chosen):
+            chosen.append(idx)
+    chosen.sort()
+    if len(chosen) < 2:
+        return []
+    return [y_offset + idx for idx in chosen[:3]]
+
+
 def _interior_edge_lines(rgb: np.ndarray, mask: np.ndarray, profile: Profile) -> list[list[Point]]:
     gray = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
     gray = cv2.bilateralFilter(gray, 7, 36, 36)
@@ -278,6 +385,116 @@ def _interior_edge_lines(rgb: np.ndarray, mask: np.ndarray, profile: Profile) ->
 
     candidates.sort(key=lambda item: item[0], reverse=True)
     return [line for _, line in candidates[: profile.max_edge_lines]]
+
+
+def _appendage_centerlines(mask: np.ndarray, profile: Profile) -> list[list[Point]]:
+    if not np.any(mask):
+        return []
+
+    dist = cv2.distanceTransform(mask.astype(np.uint8), cv2.DIST_L2, 5)
+    skeleton = _skeletonize(mask)
+    if not np.any(skeleton):
+        return []
+
+    paths = _trace_skeleton_paths(skeleton)
+    lines: list[tuple[float, list[Point]]] = []
+    for path in paths:
+        if len(path) < 12:
+            continue
+        xs = np.array([p[0] for p in path], dtype=np.int32)
+        ys = np.array([p[1] for p in path], dtype=np.int32)
+        widths = dist[ys, xs]
+        length = _path_length(path)
+        if length < 42.0:
+            continue
+        if float(np.median(widths)) > 26.0:
+            continue
+        if float(np.quantile(widths, 0.85)) > 42.0:
+            continue
+        approx = cv2.approxPolyDP(np.array(path, dtype=np.float32).reshape(-1, 1, 2), 1.6, False).reshape(-1, 2)
+        line = [(float(x), float(y)) for x, y in approx]
+        if len(line) >= 2:
+            lines.append((length, line))
+
+    lines.sort(key=lambda item: item[0], reverse=True)
+    return [line for _, line in lines[:90]]
+
+
+def _skeletonize(mask: np.ndarray) -> np.ndarray:
+    img = (mask > 0).astype(np.uint8) * 255
+    skel = np.zeros_like(img)
+    element = cv2.getStructuringElement(cv2.MORPH_CROSS, (3, 3))
+    for _ in range(512):
+        opened = cv2.morphologyEx(img, cv2.MORPH_OPEN, element)
+        temp = cv2.subtract(img, opened)
+        skel = cv2.bitwise_or(skel, temp)
+        img = cv2.erode(img, element)
+        if cv2.countNonZero(img) == 0:
+            break
+    return (skel > 0).astype(np.uint8)
+
+
+def _trace_skeleton_paths(skeleton: np.ndarray) -> list[list[tuple[int, int]]]:
+    ys, xs = np.nonzero(skeleton)
+    points = {(int(x), int(y)) for x, y in zip(xs, ys)}
+    if not points:
+        return []
+
+    def neighbors(point: tuple[int, int]) -> list[tuple[int, int]]:
+        x, y = point
+        found: list[tuple[int, int]] = []
+        for dy in (-1, 0, 1):
+            for dx in (-1, 0, 1):
+                if dx == 0 and dy == 0:
+                    continue
+                candidate = (x + dx, y + dy)
+                if candidate in points:
+                    found.append(candidate)
+        return found
+
+    degree = {point: len(neighbors(point)) for point in points}
+    starts = [point for point, count in degree.items() if count != 2]
+    if not starts:
+        starts = [next(iter(points))]
+
+    visited_edges: set[tuple[tuple[int, int], tuple[int, int]]] = set()
+    paths: list[list[tuple[int, int]]] = []
+
+    def edge_key(a: tuple[int, int], b: tuple[int, int]) -> tuple[tuple[int, int], tuple[int, int]]:
+        return (a, b) if a <= b else (b, a)
+
+    for start in starts:
+        for first in neighbors(start):
+            key = edge_key(start, first)
+            if key in visited_edges:
+                continue
+            path = [start]
+            previous = start
+            current = first
+            visited_edges.add(key)
+            for _ in range(4096):
+                path.append(current)
+                next_points = [point for point in neighbors(current) if point != previous]
+                if len(next_points) != 1:
+                    break
+                next_point = next_points[0]
+                key = edge_key(current, next_point)
+                if key in visited_edges:
+                    break
+                visited_edges.add(key)
+                previous, current = current, next_point
+            paths.append(path)
+
+    return paths
+
+
+def _path_length(path: list[tuple[int, int]] | list[Point]) -> float:
+    if len(path) < 2:
+        return 0.0
+    total = 0.0
+    for a, b in zip(path, path[1:]):
+        total += float(np.hypot(b[0] - a[0], b[1] - a[1]))
+    return total
 
 
 def _xdog_edges(gray: np.ndarray, mask: np.ndarray) -> np.ndarray:
@@ -358,7 +575,7 @@ def _sucker_rings(rgb: np.ndarray, mask: np.ndarray, profile: Profile) -> list[t
     saturation = hsv[:, :, 1]
     height, width = mask.shape
     dist = cv2.distanceTransform(mask.astype(np.uint8), cv2.DIST_L2, 5)
-    narrow_body = (dist < max(10.0, min(height, width) * 0.055)).astype(np.uint8)
+    narrow_body = (dist < max(8.0, min(22.0, min(height, width) * 0.026))).astype(np.uint8)
     bright = ((gray > 176) & (saturation < 112) & (mask > 0) & (narrow_body > 0)).astype(np.uint8)
     bright = cv2.morphologyEx(bright, cv2.MORPH_CLOSE, np.ones((3, 3), np.uint8), iterations=1)
     count, labels, stats, centroids = cv2.connectedComponentsWithStats(bright, 8)
@@ -465,7 +682,28 @@ def _eye_candidates(rgb: np.ndarray, mask: np.ndarray, profile: Profile) -> list
         candidates.append((score, float(x), float(y), float(radius), float(area)))
 
     candidates.sort(key=lambda item: item[0], reverse=True)
+    component_count, component_labels, component_stats, _ = cv2.connectedComponentsWithStats(mask.astype(np.uint8), 8)
+    selected_by_component: dict[int, tuple[float, float, float, float]] = {}
+    for score, x, y, radius, _area in candidates:
+        label = int(component_labels[int(round(y)), int(round(x))])
+        if label <= 0:
+            continue
+        if label not in selected_by_component:
+            selected_by_component[label] = (x, y, radius, score)
+
     selected: list[tuple[float, float, float, float]] = []
+    component_order = sorted(
+        selected_by_component,
+        key=lambda label: int(component_stats[label, cv2.CC_STAT_AREA]) if label < component_count else 0,
+        reverse=True,
+    )
+    for label in component_order:
+        selected.append(selected_by_component[label])
+        if len(selected) >= 4:
+            break
+    if selected:
+        return selected
+
     for score, x, y, radius, _area in candidates:
         if any((x - ox) ** 2 + (y - oy) ** 2 < max(28.0, radius * 4.0) ** 2 for ox, oy, _oradius, _score in selected):
             continue
@@ -534,6 +772,48 @@ def _offset_line(line: Iterable[Point], dx: float, dy: float) -> list[Point]:
     return [(x + dx, y + dy) for x, y in line]
 
 
+def _sort_polylines(lines: list[list[Point]]) -> list[list[Point]]:
+    remaining = [line[:] for line in lines if len(line) >= 2]
+    sorted_lines: list[list[Point]] = []
+    cursor = (0.0, 0.0)
+    while remaining:
+        best_idx = 0
+        best_reverse = False
+        best_dist = float("inf")
+        for idx, line in enumerate(remaining):
+            start_dist = (line[0][0] - cursor[0]) ** 2 + (line[0][1] - cursor[1]) ** 2
+            end_dist = (line[-1][0] - cursor[0]) ** 2 + (line[-1][1] - cursor[1]) ** 2
+            if start_dist < best_dist:
+                best_idx = idx
+                best_reverse = False
+                best_dist = start_dist
+            if end_dist < best_dist:
+                best_idx = idx
+                best_reverse = True
+                best_dist = end_dist
+        line = remaining.pop(best_idx)
+        if best_reverse:
+            line = list(reversed(line))
+        sorted_lines.append(line)
+        cursor = line[-1]
+    return sorted_lines
+
+
+def _sort_circles(circles: list[tuple[float, float, float]]) -> list[tuple[float, float, float]]:
+    remaining = circles[:]
+    sorted_circles: list[tuple[float, float, float]] = []
+    cursor = (0.0, 0.0)
+    while remaining:
+        best_idx = min(
+            range(len(remaining)),
+            key=lambda idx: (remaining[idx][0] - cursor[0]) ** 2 + (remaining[idx][1] - cursor[1]) ** 2,
+        )
+        circle = remaining.pop(best_idx)
+        sorted_circles.append(circle)
+        cursor = (circle[0], circle[1])
+    return sorted_circles
+
+
 def _svg_text(drawing: SvgDrawing, profile: Profile) -> str:
     stroke = _fmt(profile.stroke_width)
     parts = [
@@ -544,22 +824,31 @@ def _svg_text(drawing: SvgDrawing, profile: Profile) -> str:
     ]
     for path in drawing.filled_paths or []:
         parts.append(f'<path d="{path}" fill="black" stroke="none" />')
-    parts.extend([
-        f'<g stroke="black" stroke-width="{stroke}" stroke-linecap="round" '
-        'stroke-linejoin="round" fill="none">',
-    ])
-    for line in drawing.polylines:
-        if len(line) < 2:
-            continue
-        points = " ".join(f"{_fmt(x)},{_fmt(y)}" for x, y in line)
-        parts.append(f'<polyline points="{points}" />')
+    line_layers = drawing.line_layers or [("linework", drawing.polylines)]
+    for name, lines in line_layers:
+        parts.append(
+            f'<g id="{name}" stroke="black" stroke-width="{stroke}" '
+            'stroke-linecap="round" stroke-linejoin="round" fill="none">'
+        )
+        for line in lines:
+            if len(line) < 2:
+                continue
+            points = " ".join(f"{_fmt(x)},{_fmt(y)}" for x, y in line)
+            parts.append(f'<polyline points="{points}" />')
+        parts.append("</g>")
+    parts.append(
+        f'<g id="sucker-rings" stroke="black" stroke-width="{stroke}" '
+        'stroke-linecap="round" stroke-linejoin="round" fill="none">'
+    )
     for x, y, r in drawing.rings:
         parts.append(f'<circle cx="{_fmt(x)}" cy="{_fmt(y)}" r="{_fmt(r)}" />')
         parts.append(f'<circle cx="{_fmt(x)}" cy="{_fmt(y)}" r="{_fmt(max(0.75, r * 0.48))}" />')
     parts.append("</g>")
-    parts.append('<g fill="black" stroke="none">')
+    parts.append('<g id="stipple" fill="black" stroke="none">')
     for x, y, r in drawing.dots:
         parts.append(f'<circle cx="{_fmt(x)}" cy="{_fmt(y)}" r="{_fmt(r)}" />')
+    parts.append("</g>")
+    parts.append('<g id="eye-pupils" fill="black" stroke="none">')
     for x, y, r in drawing.filled_circles:
         parts.append(f'<circle cx="{_fmt(x)}" cy="{_fmt(y)}" r="{_fmt(r)}" />')
     parts.append("</g>")

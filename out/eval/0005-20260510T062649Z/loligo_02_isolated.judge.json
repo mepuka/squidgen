@@ -1,0 +1,18 @@
+{
+  "anatomy": 1,
+  "linework": 2,
+  "notes": "Output is an edge-detection trace of the entire multi-squid photo fused into one amorphous blob, with no recognizable single-squid anatomy, no eye, no arms, and no tentacles.",
+  "silhouette_match": 1,
+  "specific_issues": [
+    "silhouette is a fused outline of multiple squid stacked together, not a single specimen",
+    "no discernible arms or tentacles",
+    "no eye drawn (only noisy fragments where eyes should be)",
+    "no fin separation from mantle",
+    "interior is photo-trace edge-detection clutter rather than FAO stipple",
+    "no clean continuous mantle/fin contour",
+    "no ring-shaped suckers",
+    "orientation and proportions do not depict any one squid from the photo",
+    "looks like an automated raster-to-vector edge filter, not scientific ink linework"
+  ],
+  "style_fidelity": 1
+}

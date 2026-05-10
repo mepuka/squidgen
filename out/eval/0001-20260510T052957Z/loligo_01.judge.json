@@ -1,0 +1,18 @@
+{
+  "anatomy": 2,
+  "linework": 4,
+  "notes": "A vertically oriented generic squid silhouette with FAO-style stippling that does not match the input photo's horizontal pose, long curving tentacles, or proportions.",
+  "silhouette_match": 2,
+  "specific_issues": [
+    "wrong orientation \u2014 input is horizontal/lateral, output is vertical/ventral",
+    "missing the two long curving tentacles that dominate the input photo (one arcing above the mantle, one arcing below)",
+    "arms reduced to short stubby projections; arm count and arrangement do not match the input",
+    "no almond eye with pupil drawn where the eye sits in the photo",
+    "fins absent from posterior \u2014 input has clear rhombic fin lobes on the mantle's trailing end",
+    "heavy, near-uniform stipple slab across the lower mantle rather than sparse chromatophore-localized stipple matching the photo",
+    "mantle proportions wrong \u2014 output is far more elongated and bulbous than the photo's tapered mantle",
+    "reads as a procedurally-generated/generic cephalopod template rather than this specific Loligo individual",
+    "overall silhouette appears rotated 90\u00b0 and re-imagined, not traced from the input"
+  ],
+  "style_fidelity": 2
+}

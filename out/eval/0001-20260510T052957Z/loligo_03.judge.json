@@ -1,0 +1,20 @@
+{
+  "anatomy": 1,
+  "linework": 5,
+  "notes": "Output is two abstract blob silhouettes oriented vertically that bear no resemblance to the horizontal dorsal+lateral squid pair in the input photo, with arms, tentacles, fins, and head all missing or unrecognizable.",
+  "silhouette_match": 1,
+  "specific_issues": [
+    "silhouette completely wrong \u2014 vertical bottle-like blobs vs. horizontal squid in photo",
+    "no arms rendered (input shows 8 arms splayed plus 2 tentacles)",
+    "no tentacular clubs visible",
+    "fins not rendered as the diamond/rhombic Loligo fin from the photo",
+    "head/mantle junction missing \u2014 no neck constriction or funnel",
+    "eye placed in mantle region rather than on the head",
+    "stipple is uniformly scattered instead of concentrated in the dark dorsal chromatophore band visible in the photo",
+    "small ring-circle marks placed randomly on body, not along arms as suckers",
+    "left figure has spurious horn-like protrusions with no anatomical referent",
+    "right figure top resembles a forked tail rather than arm crown",
+    "appears procedurally generated rather than traced from this specific photo"
+  ],
+  "style_fidelity": 1
+}

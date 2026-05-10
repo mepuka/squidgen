@@ -1,0 +1,18 @@
+{
+  "anatomy": 1,
+  "linework": 4,
+  "notes": "The output is a shapeless blob with no recognizable squid anatomy, bearing no resemblance to the input photo of multiple loligo squid.",
+  "silhouette_match": 1,
+  "specific_issues": [
+    "silhouette does not match input photo at all \u2014 appears procedurally generated",
+    "no arms or tentacles depicted (input clearly shows arm cluster on right side)",
+    "no clear mantle/head separation",
+    "fins are absent or grossly malformed (small bump at top right, split lobes at bottom that read as fins in wrong orientation)",
+    "eyes are tiny generic dots placed mid-body rather than almond shapes at the head",
+    "stipple is spread uniformly rather than concentrated in chromatophore fields visible in photo",
+    "no ring suckers anywhere",
+    "internal vertical line splitting the lower body has no anatomical basis",
+    "overall shape reads as a featureless lumpy outline, not a cephalopod"
+  ],
+  "style_fidelity": 1
+}

@@ -1,0 +1,17 @@
+{
+  "anatomy": 3,
+  "linework": 3,
+  "notes": "Generated output captures the squid's overall horizontal pose and fin/mantle/arm layout but reads as a noisy edge-trace rather than a clean FAO ink plate, with broken outlines and scattered debris stipple instead of disciplined linework.",
+  "silhouette_match": 4,
+  "specific_issues": [
+    "mantle and fin outline is jittery/broken rather than a single clean continuous contour",
+    "stipple is scattered as random speckles instead of being concentrated in chromatophore/shadow fields",
+    "eye is rendered as a tiny edge-trace artifact, not an almond outline with a filled pupil",
+    "arms read as flat tapered strips without ring suckers or interior structure",
+    "tentacles are merged/lost \u2014 the long tentacular stalks visible in the photo are not clearly separated from the arms",
+    "output reads as photo-edge-detection clutter rather than scientific plate restraint",
+    "no internal anatomical landmarks (funnel, mantle opening, gladius) suggested",
+    "silhouette is recognisable as the same animal in pose but proportions of head/funnel and arm spread are distorted"
+  ],
+  "style_fidelity": 3
+}

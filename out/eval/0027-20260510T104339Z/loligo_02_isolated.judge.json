@@ -1,0 +1,17 @@
+{
+  "anatomy": 3,
+  "linework": 5,
+  "notes": "Recognisable as the same row of squid mantles with chromatophore stippling, but only 3 of 4 individuals are drawn and the arm crowns are almost entirely missing.",
+  "silhouette_match": 5,
+  "specific_issues": [
+    "Input has 4 squid laid horizontally; output shows only 3",
+    "Arms and tentacles on the right side are truncated or missing entirely \u2014 no recognisable arm crown on any individual",
+    "Chromatophore patches rendered as noisy worm-like squiggles rather than clean FAO stipple",
+    "Bottom squid lacks an eye and any head detail",
+    "Mantle silhouettes have small breaks and stray contour fragments",
+    "Fin shape on bottom squid reads as a blunt lobe rather than the photo's tapered fin",
+    "No suckers or arm segmentation visible where arms do appear",
+    "Overall reads as a partial photo-trace rather than an FAO scientific plate"
+  ],
+  "style_fidelity": 4
+}

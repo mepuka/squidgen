@@ -1,0 +1,17 @@
+{
+  "anatomy": 3,
+  "linework": 4,
+  "notes": "Traces the photo's mantle silhouettes recognizably but drops one of the four squid, omits arm/tentacle definition, and retains noisy specular-highlight fragments that read as photo-trace clutter rather than FAO scientific restraint.",
+  "silhouette_match": 5,
+  "specific_issues": [
+    "only 3 mantles rendered though input photo shows 4 squid",
+    "arms and tentacles essentially absent \u2014 no ring suckers, no club definition",
+    "eyes are tiny dot-pupils rather than the clear almond-with-pupil FAO convention",
+    "interior littered with broken short strokes traced from wet specular highlights",
+    "no fin outlines distinguishable from mantle",
+    "stipple is scattered noise rather than concentrated chromatophore fields matching the photo",
+    "outline broken/fragmented in places along mantle edges",
+    "head/arm-crown region reduced to a few squiggles instead of articulated anatomy"
+  ],
+  "style_fidelity": 4
+}

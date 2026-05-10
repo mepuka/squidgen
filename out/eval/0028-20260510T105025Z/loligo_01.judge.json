@@ -1,0 +1,17 @@
+{
+  "anatomy": 4,
+  "linework": 3,
+  "notes": "Pose roughly matches the photo with mantle on left and two long tentacular arms extending up and down on the right, but the silhouette is jittery and broken and the interior reads as photo-trace noise rather than scientific stipple.",
+  "silhouette_match": 5,
+  "specific_issues": [
+    "broken, jagged outline rather than clean continuous FAO silhouette",
+    "jittery double-line edges throughout the mantle and fins",
+    "no recognisable almond eye with filled pupil at the photo's eye location",
+    "no ring suckers along the arms or tentacular clubs",
+    "stipple is scattered noise, not concentrated in the photo's chromatophore field",
+    "arms on the right are mushy and indistinct, hard to count individual arms",
+    "tentacular club tips lack the distinctive sucker rows visible in the photo",
+    "overall reads as edge-detection trace artifact, not single-weight ink plate"
+  ],
+  "style_fidelity": 3
+}

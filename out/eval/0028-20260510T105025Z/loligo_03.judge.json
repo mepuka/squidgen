@@ -1,0 +1,19 @@
+{
+  "anatomy": 3,
+  "linework": 3,
+  "notes": "Two-view layout matches the photo's composition but the mantle/fin shape is distorted into a trumpet flare and the appendages collapse into blobs rather than discrete arms and tentacles.",
+  "silhouette_match": 4,
+  "specific_issues": [
+    "top mantle reads as a flared trumpet rather than the photo's torpedo body with terminal rhomboid fins",
+    "fins on top view become squared shoulder-like protrusions",
+    "arms and tentacles fuse into blob-like masses with no clear count or differentiation",
+    "tentacular clubs of the long pair not articulated as in the photo",
+    "eye missing on the top (dorsal) view",
+    "ventral eye is present but very small and lacks the dark chromatophore field around it from the photo",
+    "sucker rings only sporadically indicated, mostly absent along arms",
+    "heavy broken-line clutter on body and arms reads as photo-trace noise rather than FAO stipple",
+    "stipple field on mantle is sparse and not concentrated to match the photo's chromatophore pattern",
+    "no clean continuous outline \u2014 silhouette is interrupted by stray segments"
+  ],
+  "style_fidelity": 4
+}

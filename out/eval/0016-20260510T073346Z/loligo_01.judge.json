@@ -1,0 +1,16 @@
+{
+  "anatomy": 4,
+  "linework": 3,
+  "notes": "Silhouette roughly tracks the photo's pose and proportions but the linework is broken, noisy and lacks the clean single-weight ink and structured stipple of an FAO plate.",
+  "silhouette_match": 6,
+  "specific_issues": [
+    "broken, fragmented silhouette outline instead of a clean continuous contour",
+    "no defined almond eye with filled pupil \u2014 eye area is just a few small circles",
+    "no ring suckers articulated along the arms or tentacular clubs",
+    "stipple is scattered randomly across the body rather than concentrated in chromatophore fields visible in the photo",
+    "fin contour is jittery and dashed rather than a clean curve",
+    "tentacle clubs lack the clear hook/sucker articulation seen in FAO plates",
+    "overall reads as a noisy photo edge-trace rather than a scientific plate"
+  ],
+  "style_fidelity": 3
+}

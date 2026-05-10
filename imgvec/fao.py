@@ -622,7 +622,6 @@ def _xdog_edges(gray: np.ndarray, mask: np.ndarray) -> np.ndarray:
 
 
 def _stipple_dots(rgb: np.ndarray, mask: np.ndarray, profile: Profile) -> list[tuple[float, float, float]]:
-    rng = np.random.default_rng(profile.seed)
     gray = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY).astype(np.float32)
     hsv = cv2.cvtColor(rgb, cv2.COLOR_RGB2HSV).astype(np.float32)
     dark = (255.0 - gray) / 255.0
@@ -636,30 +635,33 @@ def _stipple_dots(rgb: np.ndarray, mask: np.ndarray, profile: Profile) -> list[t
     masked = weight[mask > 0]
     if masked.size == 0:
         return []
-    floor = float(np.quantile(masked, 0.90))
-    floor = max(0.22, min(0.54, floor))
-
-    height, width = mask.shape
 
     dots: list[tuple[float, float, float, float]] = []
-    step = profile.stipple_step
-    for y in range(step, height - step, step):
-        for x in range(step, width - step, step):
-            jx = int(round(x + rng.uniform(-step * 0.42, step * 0.42)))
-            jy = int(round(y + rng.uniform(-step * 0.42, step * 0.42)))
-            if jx < 0 or jy < 0 or jx >= width or jy >= height or mask[jy, jx] == 0:
+    for quantile, radius_scale, area_max in ((0.965, 0.72, 160), (0.935, 0.54, 82), (0.905, 0.42, 38)):
+        threshold = float(np.quantile(masked, quantile))
+        blobs = ((weight >= threshold) & (mask > 0)).astype(np.uint8)
+        count, labels, stats, centroids = cv2.connectedComponentsWithStats(blobs, 8)
+        for label in range(1, count):
+            area = int(stats[label, cv2.CC_STAT_AREA])
+            if area < 1 or area > area_max:
                 continue
-            w = float(weight[jy, jx])
-            if w <= floor:
+            x, y = centroids[label]
+            if x < 0 or y < 0:
                 continue
-            threshold = profile.stipple_strength * ((w - floor) / max(0.001, 1.0 - floor)) ** 1.35
-            if rng.random() < threshold:
-                radius = 0.34 + min(0.92, w * 1.05) + rng.uniform(-0.08, 0.10)
-                dots.append((w, float(jx), float(jy), max(0.42, radius)))
+            region = labels == label
+            score = float(weight[region].mean()) * 100.0 + area * 0.08
+            radius = max(0.34, min(1.85, (area / np.pi) ** 0.5 * radius_scale))
+            dots.append((score, float(x), float(y), float(radius)))
 
     dots.sort(key=lambda item: item[0], reverse=True)
-    kept = [(x, y, r) for _, x, y, r in dots[: profile.max_stipple_dots]]
-    kept.extend(_large_chromatophore_dots(weight, mask, limit=160))
+    kept: list[tuple[float, float, float]] = []
+    min_gap_sq = 8.0
+    for _score, x, y, radius in dots:
+        if any((x - px) ** 2 + (y - py) ** 2 < min_gap_sq for px, py, _pr in kept):
+            continue
+        kept.append((x, y, radius))
+        if len(kept) >= profile.max_stipple_dots:
+            break
     return kept
 
 

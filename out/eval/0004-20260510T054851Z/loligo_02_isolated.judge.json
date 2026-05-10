@@ -1,0 +1,18 @@
+{
+  "anatomy": 1,
+  "linework": 2,
+  "notes": "Output is a noisy edge-detection trace of the entire multi-squid photo (including watermark glyphs) rather than a clean FAO-style rendering of a single squid.",
+  "silhouette_match": 1,
+  "specific_issues": [
+    "silhouette is a blob enclosing multiple squids, not a single subject",
+    "no recognizable mantle/fin/head separation",
+    "arms and tentacles entirely absent",
+    "watermark text ('123RF', '123 com') visibly traced into the linework",
+    "broken, fragmented contours instead of single-weight continuous outline",
+    "stipple is random edge noise, not chromatophore fields",
+    "no almond eye with pupil placed correctly; tiny stray dots only",
+    "no ring suckers",
+    "looks like raw Canny/edge filter output rather than a scientific plate"
+  ],
+  "style_fidelity": 1
+}

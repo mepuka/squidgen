@@ -1,0 +1,18 @@
+{
+  "anatomy": 3,
+  "linework": 4,
+  "notes": "Captures the dual-specimen layout and rough mantle/fin proportions but the arms and tentacles are fused into blob silhouettes with no individuated appendages or suckers, falling well short of an FAO plate.",
+  "silhouette_match": 4,
+  "specific_issues": [
+    "arms and tentacles merged into single mass \u2014 individual arm pairs not separable",
+    "no ring suckers visible along arms",
+    "tentacular clubs absent / unreadable",
+    "eye reduced to a tiny dot rather than almond with defined pupil",
+    "stipple is scattered noise rather than coherent chromatophore fields",
+    "fin outline jagged and broken, not a clean continuous curve",
+    "random short dashes across mantle read as photo-trace clutter, not scientific stipple",
+    "arm count from photo not preserved in either specimen",
+    "silhouette outline has spurious notches and protrusions inconsistent with the photo"
+  ],
+  "style_fidelity": 3
+}

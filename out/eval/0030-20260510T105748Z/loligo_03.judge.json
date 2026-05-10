@@ -1,0 +1,16 @@
+{
+  "anatomy": 4,
+  "linework": 7,
+  "notes": "Captures the dual-view layout and FAO ink-on-white restraint, but the dorsal view's flared fins collapse into a blob and individual arms/tentacles are not differentiated.",
+  "silhouette_match": 5,
+  "specific_issues": [
+    "dorsal view fins not flared as in photo \u2014 silhouette reads as a single rounded blob instead of the distinctive diamond/skirt shape",
+    "arms and tentacles merge into undifferentiated lobes; cannot count 8 arms + 2 tentacles",
+    "missing the dark chromatophore patch on the head visible in the photo",
+    "sucker rings sparse and clumped rather than running along arm lengths",
+    "lateral mantle outline is wobbly/asymmetric where the photo shows a clean taper",
+    "eye in dorsal view is barely indicated",
+    "tentacular club shape on the long tentacles is absent"
+  ],
+  "style_fidelity": 5
+}

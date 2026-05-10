@@ -71,9 +71,10 @@ def render_fao_svg(
 
     outline_lines = [line for subject_mask in subject_masks for line in _silhouette_lines(subject_mask, profile)]
     appendage_lines = _appendage_centerlines(mask, profile)
-    detail_lines = _interior_edge_lines(rgb, mask, profile)
-    if source_border_gray < 90.0 or source_border_gray >= 245.0:
-        detail_lines.extend(_dark_ridge_lines(rgb, mask, profile))
+    if allow_multiple_eyes:
+        detail_lines = _interior_edge_lines(rgb, mask, profile)
+    else:
+        detail_lines: list[list[Point]] = []
     eye_masks = _eye_subject_masks(subject_masks)
     line_layers = [
         ("outline", _sort_polylines(outline_lines)),

@@ -1,0 +1,17 @@
+{
+  "anatomy": 3,
+  "linework": 4,
+  "notes": "Captures the multi-squid arrangement and approximate mantle outlines from the photo, but internal marks are noisy photo-trace squiggles rather than FAO-style stipple, and arms/tentacles are largely missing.",
+  "silhouette_match": 6,
+  "specific_issues": [
+    "noisy squiggle marks tracing photo highlights instead of clean stipple",
+    "arms and tentacles barely rendered \u2014 only small fragments on the right side",
+    "fins not clearly delineated from mantle silhouette",
+    "broken/jittery outline segments around mantle edges",
+    "eyes present but lack the almond shape and clear pupil placement of FAO plates",
+    "composition shows multiple specimens overlapping like the photo rather than isolated specimen view typical of FAO plates",
+    "internal contour lines appear to follow photo glare/shadows rather than anatomical structure",
+    "missing hectocotylus, suckers, and other diagnostic features that FAO plates emphasize"
+  ],
+  "style_fidelity": 4
+}

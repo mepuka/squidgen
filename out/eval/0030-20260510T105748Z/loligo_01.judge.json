@@ -1,0 +1,15 @@
+{
+  "anatomy": 5,
+  "linework": 6,
+  "notes": "Recognisably the same loligo with correct horizontal pose, fin shape and the distinctive curled-up and trailing-down tentacle pair, but interior detail is sparse and the arm crown reads as a lobed blob rather than discrete arms.",
+  "silhouette_match": 7,
+  "specific_issues": [
+    "arm crown rendered as fused lobes instead of 8 distinct arms",
+    "stipple is scattered noise rather than concentrated chromatophore fields matching the photo's dorsal/lateral shading",
+    "eye is present but very small and lacks the almond outline typical of FAO plates",
+    "sucker rings only appear on the two long tentacles; arms show no suckers",
+    "a couple of stray short line segments near the head read as artefacts",
+    "fin-mantle junction is a single contour with no internal anatomical line separating fin from mantle"
+  ],
+  "style_fidelity": 6
+}

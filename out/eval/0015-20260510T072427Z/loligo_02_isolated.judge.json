@@ -1,0 +1,18 @@
+{
+  "anatomy": 2,
+  "linework": 3,
+  "notes": "Output is an edge-trace of the photo capturing only three mantle outlines without arms, tentacles, or proper FAO scientific plate styling.",
+  "silhouette_match": 3,
+  "specific_issues": [
+    "arms and tentacles are entirely missing \u2014 only mantles + heads are traced",
+    "fourth squid from the input photo is not rendered",
+    "eyes are tiny black dots, not the FAO almond eye with distinct pupil",
+    "interior detail is noisy photo-trace edge clutter rather than sparse stippled chromatophores",
+    "no ring-shaped suckers anywhere",
+    "silhouettes are broken/jagged at head-mantle junctions, not a clean continuous fin-mantle outline",
+    "fins are not delineated as separate contour from the mantle",
+    "reads as a Canny edge-detection pass, not an FAO scientific plate",
+    "no consistent single-weight ink quality \u2014 lines are fragmented"
+  ],
+  "style_fidelity": 2
+}

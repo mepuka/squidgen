@@ -1,0 +1,17 @@
+{
+  "anatomy": 3,
+  "linework": 3,
+  "notes": "Two-view layout roughly mirrors the input but arms collapse into undifferentiated blobs, fins are distorted, and the interior is cluttered with noisy photo-trace squiggles rather than clean FAO stipple.",
+  "silhouette_match": 4,
+  "specific_issues": [
+    "individual arms not delineated \u2014 fused into clumpy masses",
+    "top-view fins have angular/broken shape unlike the rounded fins in the photo",
+    "interior filled with noisy short-stroke clutter rather than sparse stipple",
+    "broken/discontinuous silhouette edges",
+    "tentacular clubs not distinguishable from arms",
+    "eye present but lacks the almond shape and proper placement of the lateral view",
+    "no visible ring suckers along arms",
+    "overall reads as photo-trace artifact rather than scientific plate"
+  ],
+  "style_fidelity": 4
+}

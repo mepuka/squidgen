@@ -1,0 +1,571 @@
+"""FAO-style squid plate renderer.
+
+The code in this module intentionally avoids the dense diagonal hatching used
+by linedraw. The target style is a scientific plate: clean outer silhouette,
+single-weight outline strokes, sparse stipple, restrained internal edges, and
+ring-shaped suckers.
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Iterable
+
+import cv2
+import numpy as np
+from PIL import Image
+
+from imgvec.profiles import Profile
+
+
+Point = tuple[float, float]
+
+
+@dataclass
+class SvgDrawing:
+    width: float
+    height: float
+    polylines: list[list[Point]]
+    dots: list[tuple[float, float, float]]
+    rings: list[tuple[float, float, float]]
+    filled_circles: list[tuple[float, float, float]]
+    filled_paths: list[str] | None = None
+
+    @property
+    def mark_count(self) -> int:
+        return (
+            len(self.polylines)
+            + len(self.dots)
+            + len(self.rings) * 2
+            + len(self.filled_circles)
+            + len(self.filled_paths or [])
+        )
+
+
+def render_fao_svg(
+    rgba: Image.Image,
+    svg_path: Path,
+    profile: Profile,
+    *,
+    source_rgb: Image.Image | None = None,
+) -> SvgDrawing:
+    """Render an FAO-style SVG strictly derived from the input segmentation.
+
+    Procedural template fallbacks have been removed: every stroke must come
+    from the input photo via _prepare_plate. This is the only allowed code
+    path. If the segmentation is empty, _prepare_plate raises rather than
+    falling back to a template.
+    """
+    plate = _prepare_plate(rgba, profile, source_rgb=source_rgb)
+    mask = plate["mask"]
+    rgb = plate["rgb"]
+    offset = float(profile.page_pad)
+    height, width = mask.shape
+
+    polylines: list[list[Point]] = []
+    polylines.extend(_silhouette_lines(mask, profile))
+    polylines.extend(_interior_edge_lines(rgb, mask, profile))
+    if profile.draw_centerline:
+        polylines.extend(_body_centerline(mask, profile))
+    if profile.draw_eye:
+        polylines.extend(_eye_lines(rgb, mask, profile))
+
+    dots = _stipple_dots(rgb, mask, profile)
+    rings = _sucker_rings(rgb, mask, profile)
+    filled_circles = _eye_pupils(rgb, mask, profile)
+
+    drawing = SvgDrawing(
+        width=float(width + profile.page_pad * 2),
+        height=float(height + profile.page_pad * 2),
+        polylines=[_offset_line(line, offset, offset) for line in polylines],
+        dots=[(x + offset, y + offset, r) for x, y, r in dots],
+        rings=[(x + offset, y + offset, r) for x, y, r in rings],
+        filled_circles=[(x + offset, y + offset, r) for x, y, r in filled_circles],
+    )
+    svg_path.write_text(_svg_text(drawing, profile), encoding="utf-8")
+    return drawing
+
+
+def _prepare_plate(
+    rgba: Image.Image,
+    profile: Profile,
+    *,
+    source_rgb: Image.Image | None = None,
+) -> dict[str, np.ndarray]:
+    rgba = rgba.convert("RGBA")
+    source = source_rgb.convert("RGB") if source_rgb is not None else flatten_rgba(rgba)
+    if source.size != rgba.size:
+        source = source.resize(rgba.size, Image.Resampling.LANCZOS)
+    alpha = np.array(rgba.getchannel("A"))
+    bbox = Image.fromarray(alpha).point(lambda p: 255 if p > 8 else 0).getbbox()
+    if bbox is None:
+        raise ValueError("segmentation produced an empty alpha mask")
+    pad = max(24, int(max(rgba.size) * 0.025))
+    left = max(0, bbox[0] - pad)
+    top = max(0, bbox[1] - pad)
+    right = min(rgba.width, bbox[2] + pad)
+    bottom = min(rgba.height, bbox[3] + pad)
+    rgba = rgba.crop((left, top, right, bottom))
+    source = source.crop((left, top, right, bottom))
+
+    if profile.rotate_degrees == 90:
+        rgba = rgba.transpose(Image.Transpose.ROTATE_90)
+        source = source.transpose(Image.Transpose.ROTATE_90)
+    elif profile.rotate_degrees == -90:
+        rgba = rgba.transpose(Image.Transpose.ROTATE_270)
+        source = source.transpose(Image.Transpose.ROTATE_270)
+    elif profile.rotate_degrees == 180:
+        rgba = rgba.transpose(Image.Transpose.ROTATE_180)
+        source = source.transpose(Image.Transpose.ROTATE_180)
+
+    scale = profile.height / rgba.height
+    width = max(1, int(round(rgba.width * scale)))
+    rgba = rgba.resize((width, profile.height), Image.Resampling.LANCZOS)
+    source = source.resize((width, profile.height), Image.Resampling.LANCZOS)
+
+    alpha = np.array(rgba.getchannel("A"))
+    mask = (alpha > 18).astype(np.uint8)
+    mask = _keep_large_components(mask, min_area=45)
+
+    rgb = np.array(flatten_rgba(rgba))
+    rgb[mask == 0] = 255
+    return {"rgb": rgb, "mask": mask}
+
+
+def _repair_mask_from_photo(rgb: np.ndarray, alpha_mask: np.ndarray) -> np.ndarray:
+    """Recover faint photo subject regions that rembg made low-alpha.
+
+    The alpha mask remains the anchor. Photo-only pixels are kept only if they
+    are visually different from the local background and touch the alpha mask
+    after a modest dilation, so watermark/background clutter cannot create a
+    separate procedural subject.
+    """
+    height, width = alpha_mask.shape
+    border = max(3, int(min(height, width) * 0.035))
+    samples = np.concatenate(
+        [
+            rgb[:border, :, :].reshape(-1, 3),
+            rgb[-border:, :, :].reshape(-1, 3),
+            rgb[:, :border, :].reshape(-1, 3),
+            rgb[:, -border:, :].reshape(-1, 3),
+        ],
+        axis=0,
+    )
+    bg = np.median(samples.astype(np.float32), axis=0)
+    diff = np.linalg.norm(rgb.astype(np.float32) - bg[None, None, :], axis=2)
+    gray = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
+    hsv = cv2.cvtColor(rgb, cv2.COLOR_RGB2HSV)
+    bg_gray = float(np.mean(bg))
+    if bg_gray > 150:
+        photo_fg = (diff > 17.0) | (hsv[:, :, 1] > 22) | (gray < bg_gray - 18.0)
+    else:
+        photo_fg = (diff > 18.0) | (gray > bg_gray + 18.0) | (hsv[:, :, 1] > 24)
+
+    photo_fg = cv2.morphologyEx(photo_fg.astype(np.uint8), cv2.MORPH_OPEN, np.ones((2, 2), np.uint8), iterations=1)
+    photo_fg = cv2.morphologyEx(photo_fg, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8), iterations=1)
+    alpha_near = cv2.dilate(alpha_mask.astype(np.uint8), np.ones((19, 19), np.uint8), iterations=1)
+    photo_fg = (photo_fg & alpha_near).astype(np.uint8)
+    return ((alpha_mask > 0) | (photo_fg > 0)).astype(np.uint8)
+
+
+def _detail_mask_from_photo(rgb: np.ndarray, mask: np.ndarray) -> np.ndarray:
+    height, width = mask.shape
+    border = max(3, int(min(height, width) * 0.035))
+    samples = np.concatenate(
+        [
+            rgb[:border, :, :].reshape(-1, 3),
+            rgb[-border:, :, :].reshape(-1, 3),
+            rgb[:, :border, :].reshape(-1, 3),
+            rgb[:, -border:, :].reshape(-1, 3),
+        ],
+        axis=0,
+    )
+    bg = np.median(samples.astype(np.float32), axis=0)
+    diff = np.linalg.norm(rgb.astype(np.float32) - bg[None, None, :], axis=2)
+    gray = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
+    hsv = cv2.cvtColor(rgb, cv2.COLOR_RGB2HSV)
+    bg_gray = float(np.mean(bg))
+    if bg_gray > 150:
+        soft = (diff > 8.0) | (hsv[:, :, 1] > 12) | (gray < bg_gray - 9.0)
+    else:
+        soft = (diff > 8.0) | (gray > bg_gray + 9.0) | (hsv[:, :, 1] > 12)
+
+    local = cv2.createCLAHE(clipLimit=1.6, tileGridSize=(8, 8)).apply(gray)
+    edges = cv2.Canny(local, 20, 72)
+    edge_support = cv2.dilate(edges, np.ones((7, 7), np.uint8), iterations=1) > 0
+    near = cv2.dilate(mask.astype(np.uint8), np.ones((95, 95), np.uint8), iterations=1) > 0
+    detail = ((mask > 0) | ((soft | edge_support) & near)).astype(np.uint8)
+    detail = cv2.morphologyEx(detail, cv2.MORPH_CLOSE, np.ones((3, 3), np.uint8), iterations=1)
+    return detail
+
+
+def flatten_rgba(rgba: Image.Image) -> Image.Image:
+    bg = Image.new("RGB", rgba.size, (255, 255, 255))
+    bg.paste(rgba, mask=rgba.getchannel("A"))
+    return bg
+
+
+def _keep_large_components(mask: np.ndarray, min_area: int) -> np.ndarray:
+    count, labels, stats, _ = cv2.connectedComponentsWithStats(mask, 8)
+    kept = np.zeros_like(mask)
+    for label in range(1, count):
+        if stats[label, cv2.CC_STAT_AREA] >= min_area:
+            kept[labels == label] = 1
+    return kept
+
+
+def _silhouette_lines(mask: np.ndarray, profile: Profile) -> list[list[Point]]:
+    contours, _ = cv2.findContours((mask * 255).astype(np.uint8), cv2.RETR_CCOMP, cv2.CHAIN_APPROX_NONE)
+    lines: list[list[Point]] = []
+    for contour in sorted(contours, key=cv2.contourArea, reverse=True):
+        area = abs(cv2.contourArea(contour))
+        length = cv2.arcLength(contour, True)
+        if area < 18 or length < 18:
+            continue
+        epsilon = max(0.45, length * profile.silhouette_epsilon)
+        approx = cv2.approxPolyDP(contour, epsilon, True).reshape(-1, 2).astype(float)
+        if len(approx) < 4:
+            continue
+        smooth = _chaikin_closed([(float(x), float(y)) for x, y in approx], iterations=1)
+        smooth.append(smooth[0])
+        lines.append(smooth)
+    return lines
+
+
+def _interior_edge_lines(rgb: np.ndarray, mask: np.ndarray, profile: Profile) -> list[list[Point]]:
+    gray = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
+    gray = cv2.bilateralFilter(gray, 7, 36, 36)
+    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+    local = clahe.apply(gray)
+
+    dist = cv2.distanceTransform(mask.astype(np.uint8), cv2.DIST_L2, 5)
+    interior = ((dist > 2.0) & (mask > 0)).astype(np.uint8)
+    if not np.any(interior):
+        return []
+
+    grad_x = cv2.Sobel(local, cv2.CV_32F, 1, 0, ksize=3)
+    grad_y = cv2.Sobel(local, cv2.CV_32F, 0, 1, ksize=3)
+    grad = cv2.magnitude(grad_x, grad_y)
+    grad_values = grad[interior > 0]
+    high = float(np.quantile(grad_values, 0.86)) if grad_values.size else 80.0
+    high = max(72.0, min(170.0, high))
+    low = max(28.0, high * 0.42)
+
+    canny = cv2.Canny(local, int(low), int(high))
+    xdog = _xdog_edges(local, interior)
+    edges = cv2.bitwise_or(canny, xdog)
+    edges = (edges * interior).astype(np.uint8)
+    edges = cv2.morphologyEx(edges, cv2.MORPH_OPEN, np.ones((2, 2), np.uint8), iterations=1)
+    contours, _ = cv2.findContours(edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
+
+    candidates: list[tuple[float, list[Point]]] = []
+    for contour in contours:
+        if len(contour) < 10:
+            continue
+        length = cv2.arcLength(contour, False)
+        if length < profile.min_edge_length:
+            continue
+        x, y, w, h = cv2.boundingRect(contour)
+        if w < 4 and h < 4:
+            continue
+        if max(w, h) / max(1, min(w, h)) > 42 and length < 90:
+            continue
+        approx = cv2.approxPolyDP(contour, profile.edge_epsilon, False).reshape(-1, 2)
+        line = [(float(x), float(y)) for x, y in approx]
+        if len(line) >= 2:
+            candidates.append((length, line))
+
+    candidates.sort(key=lambda item: item[0], reverse=True)
+    return [line for _, line in candidates[: profile.max_edge_lines]]
+
+
+def _xdog_edges(gray: np.ndarray, mask: np.ndarray) -> np.ndarray:
+    fine = cv2.GaussianBlur(gray, (0, 0), 0.8).astype(np.float32)
+    coarse = cv2.GaussianBlur(gray, (0, 0), 1.8).astype(np.float32)
+    dog = fine - 0.98 * coarse
+    values = dog[mask > 0]
+    if values.size == 0:
+        return np.zeros_like(gray, dtype=np.uint8)
+    threshold = float(np.quantile(values, 0.13))
+    dark_lines = ((dog < threshold) & (mask > 0)).astype(np.uint8) * 255
+    dark_lines = cv2.morphologyEx(dark_lines, cv2.MORPH_OPEN, np.ones((2, 2), np.uint8), iterations=1)
+    return dark_lines
+
+
+def _stipple_dots(rgb: np.ndarray, mask: np.ndarray, profile: Profile) -> list[tuple[float, float, float]]:
+    rng = np.random.default_rng(profile.seed)
+    gray = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY).astype(np.float32)
+    hsv = cv2.cvtColor(rgb, cv2.COLOR_RGB2HSV).astype(np.float32)
+    dark = (255.0 - gray) / 255.0
+    saturation = hsv[:, :, 1] / 255.0
+    spot = np.clip(dark * 0.62 + saturation * 0.38, 0.0, 1.0)
+    local = np.clip(spot - cv2.GaussianBlur(spot, (0, 0), 4.0), 0.0, 1.0)
+    weight = np.clip(spot * 0.68 + local * 1.85, 0.0, 1.0)
+    weight = cv2.GaussianBlur(weight, (0, 0), 0.65)
+    weight[mask == 0] = 0.0
+
+    masked = weight[mask > 0]
+    if masked.size == 0:
+        return []
+    floor = float(np.quantile(masked, 0.74))
+    floor = max(0.11, min(0.36, floor))
+
+    height, width = mask.shape
+
+    dots: list[tuple[float, float, float, float]] = []
+    step = profile.stipple_step
+    for y in range(step, height - step, step):
+        for x in range(step, width - step, step):
+            jx = int(round(x + rng.uniform(-step * 0.42, step * 0.42)))
+            jy = int(round(y + rng.uniform(-step * 0.42, step * 0.42)))
+            if jx < 0 or jy < 0 or jx >= width or jy >= height or mask[jy, jx] == 0:
+                continue
+            w = float(weight[jy, jx])
+            if w <= floor:
+                continue
+            threshold = profile.stipple_strength * ((w - floor) / max(0.001, 1.0 - floor)) ** 1.35
+            if rng.random() < threshold:
+                radius = 0.35 + min(1.0, w * 1.15) + rng.uniform(-0.10, 0.12)
+                dots.append((w, float(jx), float(jy), max(0.42, radius)))
+
+    dots.sort(key=lambda item: item[0], reverse=True)
+    kept = [(x, y, r) for _, x, y, r in dots[: profile.max_stipple_dots]]
+    kept.extend(_large_chromatophore_dots(weight, mask, limit=240))
+    return kept
+
+
+def _large_chromatophore_dots(weight: np.ndarray, mask: np.ndarray, limit: int) -> list[tuple[float, float, float]]:
+    threshold = np.quantile(weight[mask > 0], 0.90) if np.any(mask) else 1.0
+    blobs = ((weight >= threshold) & (mask > 0)).astype(np.uint8)
+    blobs = cv2.morphologyEx(blobs, cv2.MORPH_OPEN, np.ones((2, 2), np.uint8), iterations=1)
+    count, labels, stats, centroids = cv2.connectedComponentsWithStats(blobs, 8)
+    dots: list[tuple[float, float, float, float]] = []
+    for label in range(1, count):
+        area = int(stats[label, cv2.CC_STAT_AREA])
+        if area < 3 or area > 70:
+            continue
+        x, y = centroids[label]
+        radius = min(1.95, max(0.65, (area / np.pi) ** 0.5 * 0.48))
+        dots.append((area, float(x), float(y), float(radius)))
+    dots.sort(reverse=True)
+    return [(x, y, r) for _, x, y, r in dots[:limit]]
+
+
+def _sucker_rings(rgb: np.ndarray, mask: np.ndarray, profile: Profile) -> list[tuple[float, float, float]]:
+    gray = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
+    hsv = cv2.cvtColor(rgb, cv2.COLOR_RGB2HSV)
+    saturation = hsv[:, :, 1]
+    height, width = mask.shape
+    dist = cv2.distanceTransform(mask.astype(np.uint8), cv2.DIST_L2, 5)
+    narrow_body = (dist < max(10.0, min(height, width) * 0.055)).astype(np.uint8)
+    bright = ((gray > 176) & (saturation < 112) & (mask > 0) & (narrow_body > 0)).astype(np.uint8)
+    bright = cv2.morphologyEx(bright, cv2.MORPH_CLOSE, np.ones((3, 3), np.uint8), iterations=1)
+    count, labels, stats, centroids = cv2.connectedComponentsWithStats(bright, 8)
+    rings: list[tuple[float, float, float, float]] = []
+    for label in range(1, count):
+        area = int(stats[label, cv2.CC_STAT_AREA])
+        if area < 5 or area > 360:
+            continue
+        x, y = centroids[label]
+        bw = stats[label, cv2.CC_STAT_WIDTH]
+        bh = stats[label, cv2.CC_STAT_HEIGHT]
+        if bw <= 0 or bh <= 0:
+            continue
+        aspect = bw / bh
+        if aspect < 0.34 or aspect > 2.9:
+            continue
+        perimeter = cv2.arcLength(cv2.findContours((labels == label).astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)[0][0], True)
+        circularity = (4.0 * np.pi * area) / max(1.0, perimeter * perimeter)
+        if circularity < 0.18:
+            continue
+        radius = min(profile.sucker_max_radius, max(profile.sucker_min_radius, (area / np.pi) ** 0.5 * 0.85))
+        score = area * (0.55 + circularity) + max(0.0, 20.0 - float(dist[int(y), int(x)])) * 3.0
+        rings.append((score, float(x), float(y), float(radius)))
+
+    rings.sort(key=lambda item: item[0], reverse=True)
+    return [(x, y, r) for _, x, y, r in rings[: profile.sucker_max]]
+
+
+def _body_centerline(mask: np.ndarray, profile: Profile) -> list[list[Point]]:
+    height, width = mask.shape
+    ys: list[int] = []
+    centers: list[float] = []
+    widths: list[int] = []
+    for y in range(int(height * 0.37), int(height * 0.96), 10):
+        xs = np.flatnonzero(mask[y] > 0)
+        if len(xs) < 24:
+            continue
+        ys.append(y)
+        centers.append(float((xs[0] + xs[-1]) / 2))
+        widths.append(int(xs[-1] - xs[0]))
+    if len(ys) < 8:
+        return []
+    smooth: list[Point] = []
+    for idx, y in enumerate(ys):
+        if idx < 2 or idx > len(ys) - 3:
+            cx = centers[idx]
+        else:
+            cx = float(np.mean(centers[idx - 2 : idx + 3]))
+        smooth.append((cx, float(y)))
+    return [smooth]
+
+
+def _eye_candidates(rgb: np.ndarray, mask: np.ndarray, profile: Profile) -> list[tuple[float, float, float, float]]:
+    gray = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
+    hsv = cv2.cvtColor(rgb, cv2.COLOR_RGB2HSV)
+    dist = cv2.distanceTransform(mask.astype(np.uint8), cv2.DIST_L2, 5)
+    inside = (mask > 0) & (dist > 3.0)
+    values = gray[inside]
+    if values.size == 0:
+        return []
+
+    dark_cutoff = min(86.0, float(np.quantile(values, 0.045)) + 10.0)
+    dark = ((gray <= dark_cutoff) & inside).astype(np.uint8)
+    dark = cv2.morphologyEx(dark, cv2.MORPH_CLOSE, np.ones((3, 3), np.uint8), iterations=1)
+
+    count, labels, stats, centroids = cv2.connectedComponentsWithStats(dark, 8)
+    candidates: list[tuple[float, float, float, float, float]] = []
+    height, width = mask.shape
+    min_area = max(8, int(mask.sum() * 0.00002))
+    max_area = max(220, int(mask.sum() * 0.006))
+    for label in range(1, count):
+        area = int(stats[label, cv2.CC_STAT_AREA])
+        if area < min_area or area > max_area:
+            continue
+        x, y = centroids[label]
+        bw = int(stats[label, cv2.CC_STAT_WIDTH])
+        bh = int(stats[label, cv2.CC_STAT_HEIGHT])
+        if bw <= 1 or bh <= 1:
+            continue
+        aspect = bw / bh
+        if aspect < 0.32 or aspect > 3.6:
+            continue
+
+        region = labels == label
+        contours, _ = cv2.findContours(region.astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        if not contours:
+            continue
+        perimeter = cv2.arcLength(contours[0], True)
+        circularity = (4.0 * np.pi * area) / max(1.0, perimeter * perimeter)
+        if circularity < 0.08:
+            continue
+
+        x0 = max(0, int(x) - bw * 2)
+        x1 = min(width, int(x) + bw * 2 + 1)
+        y0 = max(0, int(y) - bh * 2)
+        y1 = min(height, int(y) + bh * 2 + 1)
+        local = gray[y0:y1, x0:x1]
+        local_mask = mask[y0:y1, x0:x1] > 0
+        local_mean = float(local[local_mask].mean()) if np.any(local_mask) else 255.0
+        darkness = max(0.0, local_mean - float(gray[int(y), int(x)]))
+        sat = float(hsv[int(y), int(x), 1])
+        radius = max(2.8, min(13.0, (area / np.pi) ** 0.5 * 1.15))
+        score = darkness * 2.4 + area * 0.12 + circularity * 32.0 + sat * 0.02
+        candidates.append((score, float(x), float(y), float(radius), float(area)))
+
+    candidates.sort(key=lambda item: item[0], reverse=True)
+    selected: list[tuple[float, float, float, float]] = []
+    for score, x, y, radius, _area in candidates:
+        if any((x - ox) ** 2 + (y - oy) ** 2 < max(28.0, radius * 4.0) ** 2 for ox, oy, _oradius, _score in selected):
+            continue
+        selected.append((x, y, radius, score))
+        if len(selected) >= 6:
+            break
+    return selected
+
+
+def _eye_lines(rgb: np.ndarray, mask: np.ndarray, profile: Profile) -> list[list[Point]]:
+    eyes = _eye_candidates(rgb, mask, profile)
+    lines: list[list[Point]] = []
+    for cx, cy, radius, _score in eyes:
+        rx = max(6.4, min(22.0, radius * 1.95))
+        ry = max(2.9, rx * 0.42)
+        top = _arc(cx, cy, rx, ry, np.pi, 0.0, 18)
+        bottom = _arc(cx, cy, rx, ry, np.pi, 2 * np.pi, 18)
+        lines.append(top)
+        lines.append(bottom)
+    return lines
+
+
+def _eye_pupils(rgb: np.ndarray, mask: np.ndarray, profile: Profile) -> list[tuple[float, float, float]]:
+    pupils: list[tuple[float, float, float]] = []
+    for cx, cy, radius, _score in _eye_candidates(rgb, mask, profile):
+        pupils.append((cx, cy, max(2.0, min(6.2, radius * 0.56))))
+    return pupils
+
+
+def _arc(cx: float, cy: float, rx: float, ry: float, start: float, end: float, count: int) -> list[Point]:
+    ts = np.linspace(start, end, count)
+    return [(float(cx + np.cos(t) * rx), float(cy + np.sin(t) * ry)) for t in ts]
+
+
+def _chaikin_closed(points: list[Point], iterations: int) -> list[Point]:
+    out = points
+    for _ in range(iterations):
+        next_points: list[Point] = []
+        for idx, p0 in enumerate(out):
+            p1 = out[(idx + 1) % len(out)]
+            q = (0.75 * p0[0] + 0.25 * p1[0], 0.75 * p0[1] + 0.25 * p1[1])
+            r = (0.25 * p0[0] + 0.75 * p1[0], 0.25 * p0[1] + 0.75 * p1[1])
+            next_points.extend([q, r])
+        out = next_points
+    return out
+
+
+def _chaikin_open(points: list[Point], iterations: int) -> list[Point]:
+    out = points
+    for _ in range(iterations):
+        if len(out) < 3:
+            return out
+        next_points: list[Point] = [out[0]]
+        for idx in range(len(out) - 1):
+            p0 = out[idx]
+            p1 = out[idx + 1]
+            q = (0.75 * p0[0] + 0.25 * p1[0], 0.75 * p0[1] + 0.25 * p1[1])
+            r = (0.25 * p0[0] + 0.75 * p1[0], 0.25 * p0[1] + 0.75 * p1[1])
+            next_points.extend([q, r])
+        next_points.append(out[-1])
+        out = next_points
+    return out
+
+
+def _offset_line(line: Iterable[Point], dx: float, dy: float) -> list[Point]:
+    return [(x + dx, y + dy) for x, y in line]
+
+
+def _svg_text(drawing: SvgDrawing, profile: Profile) -> str:
+    stroke = _fmt(profile.stroke_width)
+    parts = [
+        '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" '
+        f'viewBox="0 0 {_fmt(drawing.width)} {_fmt(drawing.height)}" '
+        f'width="{_fmt(drawing.width)}" height="{_fmt(drawing.height)}">',
+        '<rect width="100%" height="100%" fill="white" />',
+    ]
+    for path in drawing.filled_paths or []:
+        parts.append(f'<path d="{path}" fill="black" stroke="none" />')
+    parts.extend([
+        f'<g stroke="black" stroke-width="{stroke}" stroke-linecap="round" '
+        'stroke-linejoin="round" fill="none">',
+    ])
+    for line in drawing.polylines:
+        if len(line) < 2:
+            continue
+        points = " ".join(f"{_fmt(x)},{_fmt(y)}" for x, y in line)
+        parts.append(f'<polyline points="{points}" />')
+    for x, y, r in drawing.rings:
+        parts.append(f'<circle cx="{_fmt(x)}" cy="{_fmt(y)}" r="{_fmt(r)}" />')
+        parts.append(f'<circle cx="{_fmt(x)}" cy="{_fmt(y)}" r="{_fmt(max(0.75, r * 0.48))}" />')
+    parts.append("</g>")
+    parts.append('<g fill="black" stroke="none">')
+    for x, y, r in drawing.dots:
+        parts.append(f'<circle cx="{_fmt(x)}" cy="{_fmt(y)}" r="{_fmt(r)}" />')
+    for x, y, r in drawing.filled_circles:
+        parts.append(f'<circle cx="{_fmt(x)}" cy="{_fmt(y)}" r="{_fmt(r)}" />')
+    parts.append("</g>")
+    parts.append("</svg>")
+    return "\n".join(parts)
+
+
+def _fmt(value: float) -> str:
+    return f"{value:.2f}".rstrip("0").rstrip(".")

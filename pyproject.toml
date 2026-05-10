@@ -1,0 +1,28 @@
+[project]
+name = "imgvec"
+version = "0.1.0"
+description = "Photo → segmented subject → vector line drawing for plotters."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+
+dependencies = [
+  "rembg>=2.0",
+  "onnxruntime>=1.18,<1.26",
+  "pillow>=11.0",
+  "numpy>=2.0",
+  "linedraw",
+]
+
+[project.scripts]
+imgvec = "imgvec.cli:main"
+
+[tool.uv.sources]
+linedraw = { path = "/Users/pooks/Dev/linedraw", editable = true }
+
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["imgvec"]

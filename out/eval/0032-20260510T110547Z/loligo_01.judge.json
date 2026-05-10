@@ -1,0 +1,17 @@
+{
+  "anatomy": 3,
+  "linework": 4,
+  "notes": "Recognizable as a squid in the photo's pose but the silhouette merges arms/tentacles into stubby blobs and lacks the distinctive long whip tentacles, eye, and clean FAO line discipline.",
+  "silhouette_match": 4,
+  "specific_issues": [
+    "long whip tentacles from the photo are missing or truncated into short stubs",
+    "arms merge into a single mass with no individuated tapering points",
+    "eye reduced to a tiny dot rather than the prominent almond with pupil visible in the photo",
+    "fin outline is exaggerated/diamond-shaped rather than the gently rounded mantle fin in the photo",
+    "stipple is scattered randomly along edges instead of concentrated chromatophore field across the mantle",
+    "sucker rings only sparsely indicated on a couple of arms, not consistent ring pattern along all arms",
+    "outline has small bumpy artifacts suggesting photo-trace noise rather than clean single-weight ink",
+    "head/mantle junction poorly defined, no funnel detail"
+  ],
+  "style_fidelity": 3
+}

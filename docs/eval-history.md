@@ -221,3 +221,9 @@ contact sheets because those contain source/reference imagery.
 - [loligo_01.svg](../out/eval/0031-20260510T110139Z/loligo_01.svg) · [png](../out/eval/0031-20260510T110139Z/loligo_01.png) · [judge](../out/eval/0031-20260510T110139Z/loligo_01.judge.json)
 - [loligo_02_isolated.svg](../out/eval/0031-20260510T110139Z/loligo_02_isolated.svg) · [png](../out/eval/0031-20260510T110139Z/loligo_02_isolated.png) · [judge](../out/eval/0031-20260510T110139Z/loligo_02_isolated.judge.json)
 - [loligo_03.svg](../out/eval/0031-20260510T110139Z/loligo_03.svg) · [png](../out/eval/0031-20260510T110139Z/loligo_03.png) · [judge](../out/eval/0031-20260510T110139Z/loligo_03.judge.json)
+
+## Iteration 32
+
+- [loligo_01.svg](../out/eval/0032-20260510T110547Z/loligo_01.svg) · [png](../out/eval/0032-20260510T110547Z/loligo_01.png) · [judge](../out/eval/0032-20260510T110547Z/loligo_01.judge.json)
+- [loligo_02_isolated.svg](../out/eval/0032-20260510T110547Z/loligo_02_isolated.svg) · [png](../out/eval/0032-20260510T110547Z/loligo_02_isolated.png) · [judge](../out/eval/0032-20260510T110547Z/loligo_02_isolated.judge.json)
+- [loligo_03.svg](../out/eval/0032-20260510T110547Z/loligo_03.svg) · [png](../out/eval/0032-20260510T110547Z/loligo_03.png) · [judge](../out/eval/0032-20260510T110547Z/loligo_03.judge.json)

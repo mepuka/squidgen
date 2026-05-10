@@ -1,0 +1,19 @@
+{
+  "anatomy": 2,
+  "linework": 3,
+  "notes": "Output reads as a vague photo-traced blob rather than a recognizable squid \u2014 arms, tentacles, and fins are merged into amorphous masses with broken silhouettes that fail to match the dorsal/lateral pair in the input photo.",
+  "silhouette_match": 2,
+  "specific_issues": [
+    "arms not individuated \u2014 fused into single blobby masses on both views",
+    "tentacles missing or indistinguishable from arms",
+    "fins not rendered as the broad rhomboid shape visible in photo; top fin is a misshapen lobe, bottom fin is absent",
+    "mantle silhouette is broken with stray contour fragments and gaps",
+    "eye is a tiny dot rather than the almond eye with filled pupil",
+    "sucker rings completely absent on arms",
+    "stipple is uniform noise across the whole body rather than concentrated in chromatophore fields",
+    "extra phantom contour lines crossing through the body indicate photo-edge tracing artifacts",
+    "overall reads as silhouette tracing of photo regions, not an FAO scientific plate",
+    "does not depict the same individual subject in matching pose"
+  ],
+  "style_fidelity": 2
+}

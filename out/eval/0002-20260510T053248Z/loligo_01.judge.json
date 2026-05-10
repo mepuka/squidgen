@@ -1,0 +1,17 @@
+{
+  "anatomy": 2,
+  "linework": 3,
+  "notes": "Rough silhouette of mantle and arm cluster is present but the long tentacles are missing, arms read as blobby leaves, and a stray rectangular trace artifact contaminates the image.",
+  "silhouette_match": 4,
+  "specific_issues": [
+    "both long tentacular clubs from the photo are missing",
+    "stray rectangular box artifact under the head/arms breaks the silhouette",
+    "arms rendered as fused leaf-like lobes rather than discrete arms with suckers",
+    "two eyes drawn though only one is visible in the photo",
+    "stipple is uniformly random noise instead of concentrated chromatophore fields",
+    "no ring suckers shown on arms",
+    "fin-mantle outline is wavy and imprecise compared to the photo's clean rhomboid fin",
+    "overall reads as a noisy photo-trace, not an FAO plate"
+  ],
+  "style_fidelity": 3
+}

@@ -1,0 +1,18 @@
+{
+  "anatomy": 1,
+  "linework": 3,
+  "notes": "The output is a single amorphous blob outline that fails to resolve the four distinct squid in the photo into individual mantles, arms, or tentacles, reading as a generic shape rather than the input subjects.",
+  "silhouette_match": 1,
+  "specific_issues": [
+    "silhouette merges all four squid into one undifferentiated blob",
+    "no individual mantle outlines or fin separation",
+    "arms and tentacles are entirely absent \u2014 no crown, no club, no suckers",
+    "eyes are reduced to tiny dots floating in the wrong locations relative to the photo",
+    "no almond-shaped eye with filled pupil as in FAO plates",
+    "stipple is randomly scattered rather than concentrated on chromatophore fields",
+    "internal contour lines are arbitrary and do not correspond to anatomy",
+    "no fin outline traced along the mantle",
+    "does not read as an FAO scientific plate \u2014 reads as a featureless silhouette trace"
+  ],
+  "style_fidelity": 1
+}

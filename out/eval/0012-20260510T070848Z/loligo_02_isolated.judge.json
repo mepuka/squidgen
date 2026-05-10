@@ -1,0 +1,16 @@
+{
+  "anatomy": 2,
+  "linework": 3,
+  "notes": "Traces three of the four mantles roughly but drops most of the arm/tentacle cluster and fills the bodies with broken photo-trace fragments instead of FAO-style stipple.",
+  "silhouette_match": 4,
+  "specific_issues": [
+    "fourth squid from the input photo is missing entirely",
+    "arms and tentacles on the right side of each squid are essentially absent \u2014 only stub fragments remain",
+    "eyes rendered as tiny dots rather than the FAO almond shape with pupil",
+    "no ring-shaped suckers anywhere",
+    "interior 'detail' is noisy disconnected edge segments (photo-trace clutter), not concentrated stipple in chromatophore fields",
+    "fin/mantle outline breaks and stutters in several places rather than a clean continuous silhouette",
+    "head/funnel structure indistinct, looks like leftover trace noise rather than anatomy"
+  ],
+  "style_fidelity": 3
+}

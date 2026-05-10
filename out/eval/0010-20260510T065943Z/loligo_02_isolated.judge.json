@@ -1,0 +1,6 @@
+{
+  "error": "Claude judge did not return a JSON object",
+  "fixture": "/Users/pooks/Dev/squidgen/data/fixtures/loligo_02_isolated.jpg",
+  "stderr": "",
+  "stdout": "{\"linework\": 3, \"anatomy\": 2, \"style_fidelity\": 3, \"silhouette_match\": 3, \"notes\": \"Output shows three rough mantle silhouettes with scattered photo-trace fragments instead of the four squid in the input photo, and arms/eyes/fins are largely missing or misplaced.\", \"specific_issues\": [\"wrong squid count (3 rendered vs 4 in photo)\", \"missing fins on mantle tips\", \"tentacles and arms on right side reduced to fragmentary scribbles\", \"eyes inconsistently placed and missing on bottom silhouette\", \"no ring suckers depicted\", \"noisy photo-trace clutter rather than clean stippling\", \"broken / discontinuous mantle outlines\", \"head-mantle junction unclear, no defined funnel or head\", \"scattered orphaned line fragments across body interior\", \"lacks FAO scientific-plate restraint\"]\n"
+}

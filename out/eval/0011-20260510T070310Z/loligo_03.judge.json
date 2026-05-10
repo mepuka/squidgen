@@ -1,0 +1,17 @@
+{
+  "anatomy": 4,
+  "linework": 3,
+  "notes": "Dual-view layout matches the input photo's two squid orientations and the overall mantle/arm silhouette is recognisable, but the rendering reads as noisy photo-trace clutter rather than restrained FAO linework.",
+  "silhouette_match": 6,
+  "specific_issues": [
+    "broken/jittery silhouette with stray fragments along mantle and arm edges",
+    "arms fused into clumped blobs without distinct ringed suckers",
+    "stipple scattered randomly rather than concentrated in chromatophore fields",
+    "tentacular clubs not articulated as separate elongated structures",
+    "top view eye missing; bottom eye is just a small dot with no almond contour",
+    "fin outline broken and ragged rather than a clean continuous curve",
+    "many short disconnected line fragments from edge-detection artifacts",
+    "no single-weight confident contour \u2014 every line is a wobbly trace"
+  ],
+  "style_fidelity": 3
+}

@@ -17,6 +17,10 @@ contact sheets because those contain source/reference imagery.
 | 6 | 20260510T063333Z | 3.67 | 3 | 4.33 | 3 | Split fused multi-squid masks into subject bands from projection valleys. |
 | 7 | 20260510T064135Z | 3.33 | 3 | 4.33 | 4 | Reduced clutter; improved weakest silhouette floor but lost some style confidence. |
 | 8 | 20260510T064627Z | 3.00 | 2 | 4.00 | 2 | Recovered full dark-background tentacles; loligo_01 reached anatomy 6 and silhouette 7. |
+| 9 | 20260510T065344Z | 3.33 | 2 | 5.00 | 2 | Extended light-background recovery; improved average anatomy but over-admitted clutter. |
+| 10 | 20260510T065943Z | 4.00 | 4 | 6.00 | 6 | Partial run with one malformed judge response; useful signal but not a valid full pass. |
+| 11 | 20260510T070310Z | 3.00 | 3 | 5.33 | 4 | Added tolerant judge parsing and reran cleanly; scores dropped under full judging. |
+| 12 | 20260510T070848Z | 3.67 | 3 | 4.67 | 4 | Tuned bolder ink, smoother outlines, larger eyes/rings, and sparser stipple. |
 
 ## Iteration 1
 
@@ -65,3 +69,27 @@ contact sheets because those contain source/reference imagery.
 - [loligo_01.svg](../out/eval/0008-20260510T064627Z/loligo_01.svg) · [png](../out/eval/0008-20260510T064627Z/loligo_01.png) · [judge](../out/eval/0008-20260510T064627Z/loligo_01.judge.json)
 - [loligo_02_isolated.svg](../out/eval/0008-20260510T064627Z/loligo_02_isolated.svg) · [png](../out/eval/0008-20260510T064627Z/loligo_02_isolated.png) · [judge](../out/eval/0008-20260510T064627Z/loligo_02_isolated.judge.json)
 - [loligo_03.svg](../out/eval/0008-20260510T064627Z/loligo_03.svg) · [png](../out/eval/0008-20260510T064627Z/loligo_03.png) · [judge](../out/eval/0008-20260510T064627Z/loligo_03.judge.json)
+
+## Iteration 9
+
+- [loligo_01.svg](../out/eval/0009-20260510T065344Z/loligo_01.svg) · [png](../out/eval/0009-20260510T065344Z/loligo_01.png) · [judge](../out/eval/0009-20260510T065344Z/loligo_01.judge.json)
+- [loligo_02_isolated.svg](../out/eval/0009-20260510T065344Z/loligo_02_isolated.svg) · [png](../out/eval/0009-20260510T065344Z/loligo_02_isolated.png) · [judge](../out/eval/0009-20260510T065344Z/loligo_02_isolated.judge.json)
+- [loligo_03.svg](../out/eval/0009-20260510T065344Z/loligo_03.svg) · [png](../out/eval/0009-20260510T065344Z/loligo_03.png) · [judge](../out/eval/0009-20260510T065344Z/loligo_03.judge.json)
+
+## Iteration 10
+
+- [loligo_01.svg](../out/eval/0010-20260510T065943Z/loligo_01.svg) · [png](../out/eval/0010-20260510T065943Z/loligo_01.png) · [judge](../out/eval/0010-20260510T065943Z/loligo_01.judge.json)
+- [loligo_02_isolated.svg](../out/eval/0010-20260510T065943Z/loligo_02_isolated.svg) · [png](../out/eval/0010-20260510T065943Z/loligo_02_isolated.png) · [judge](../out/eval/0010-20260510T065943Z/loligo_02_isolated.judge.json)
+- [loligo_03.svg](../out/eval/0010-20260510T065943Z/loligo_03.svg) · [png](../out/eval/0010-20260510T065943Z/loligo_03.png) · [judge](../out/eval/0010-20260510T065943Z/loligo_03.judge.json)
+
+## Iteration 11
+
+- [loligo_01.svg](../out/eval/0011-20260510T070310Z/loligo_01.svg) · [png](../out/eval/0011-20260510T070310Z/loligo_01.png) · [judge](../out/eval/0011-20260510T070310Z/loligo_01.judge.json)
+- [loligo_02_isolated.svg](../out/eval/0011-20260510T070310Z/loligo_02_isolated.svg) · [png](../out/eval/0011-20260510T070310Z/loligo_02_isolated.png) · [judge](../out/eval/0011-20260510T070310Z/loligo_02_isolated.judge.json)
+- [loligo_03.svg](../out/eval/0011-20260510T070310Z/loligo_03.svg) · [png](../out/eval/0011-20260510T070310Z/loligo_03.png) · [judge](../out/eval/0011-20260510T070310Z/loligo_03.judge.json)
+
+## Iteration 12
+
+- [loligo_01.svg](../out/eval/0012-20260510T070848Z/loligo_01.svg) · [png](../out/eval/0012-20260510T070848Z/loligo_01.png) · [judge](../out/eval/0012-20260510T070848Z/loligo_01.judge.json)
+- [loligo_02_isolated.svg](../out/eval/0012-20260510T070848Z/loligo_02_isolated.svg) · [png](../out/eval/0012-20260510T070848Z/loligo_02_isolated.png) · [judge](../out/eval/0012-20260510T070848Z/loligo_02_isolated.judge.json)
+- [loligo_03.svg](../out/eval/0012-20260510T070848Z/loligo_03.svg) · [png](../out/eval/0012-20260510T070848Z/loligo_03.png) · [judge](../out/eval/0012-20260510T070848Z/loligo_03.judge.json)

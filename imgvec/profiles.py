@@ -19,17 +19,17 @@ class Profile:
     rotate_degrees: int = 0
     height: int = 1240
     page_pad: int = 42
-    stroke_width: float = 1.12
-    silhouette_epsilon: float = 0.0016
+    stroke_width: float = 1.48
+    silhouette_epsilon: float = 0.0022
     edge_epsilon: float = 1.25
     min_edge_length: float = 38.0
     max_edge_lines: int = 155
     stipple_step: int = 6
-    stipple_strength: float = 0.30
-    max_stipple_dots: int = 1500
-    sucker_max: int = 180
-    sucker_min_radius: float = 3.2
-    sucker_max_radius: float = 10.5
+    stipple_strength: float = 0.22
+    max_stipple_dots: int = 1000
+    sucker_max: int = 260
+    sucker_min_radius: float = 4.2
+    sucker_max_radius: float = 12.5
     draw_eye: bool = True
     draw_centerline: bool = False
 

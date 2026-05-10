@@ -1,0 +1,17 @@
+{
+  "anatomy": 4,
+  "linework": 3,
+  "notes": "Two-view layout and overall silhouette of the loligo are recognizable, but the rendering reads as a noisy photo-trace rather than clean FAO linework with broken contours and unresolved arms.",
+  "silhouette_match": 6,
+  "specific_issues": [
+    "fragmented/broken contour lines instead of single continuous silhouette",
+    "arms and tentacles not resolved into discrete 8+2 arrangement \u2014 appear as a tangle of short line segments",
+    "no ring-suckers depicted along arms",
+    "fin on dorsal view has jagged angular notches rather than smooth rhomboidal outline",
+    "eye on lateral view is messy and lacks a clean almond shape with small filled pupil",
+    "stipple is scattered noise rather than concentrated in chromatophore/shadow fields visible in photo",
+    "many small disconnected interior strokes give photo-trace clutter atypical of FAO plates",
+    "head-mantle junction lacks the clean transition seen in the photo"
+  ],
+  "style_fidelity": 4
+}

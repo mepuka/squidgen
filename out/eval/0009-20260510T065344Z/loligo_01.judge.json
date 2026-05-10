@@ -1,0 +1,16 @@
+{
+  "anatomy": 6,
+  "linework": 4,
+  "notes": "Recognisably the same horizontally-posed loligo from the photo with both long tentacles and fins in the right places, but the linework is faint, broken, and noisy rather than confident FAO ink.",
+  "silhouette_match": 7,
+  "specific_issues": [
+    "very thin/wispy outline lacking single-weight black ink confidence",
+    "double parallel contour lines along edges suggest noisy edge-trace artifact",
+    "stipple scattered randomly across mantle instead of concentrated in chromatophore fields visible in photo",
+    "no ring suckers depicted on tentacle clubs or arms",
+    "eye reduced to a tiny dot rather than almond outline with filled pupil",
+    "fragmented outline in places \u2014 silhouette not a clean continuous contour",
+    "arms blur into a tangled mass on the right rather than discrete delineated arms"
+  ],
+  "style_fidelity": 4
+}

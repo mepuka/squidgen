@@ -1,0 +1,18 @@
+{
+  "anatomy": 2,
+  "linework": 3,
+  "notes": "Two-panel layout and mantle proportions roughly track the input photo, but arms collapse into undifferentiated blobs and the linework is dominated by noisy photo-trace clutter rather than FAO-style restraint.",
+  "silhouette_match": 5,
+  "specific_issues": [
+    "arms and tentacles fused into amorphous lobes \u2014 no distinct individual arms",
+    "no ring suckers anywhere along the arms",
+    "extensive broken short-segment clutter from photo tracing across mantle and arms",
+    "wobbly, discontinuous mantle and fin outline rather than a single clean silhouette",
+    "stipple is sparse and randomly scattered, not concentrated in chromatophore fields",
+    "eye in top panel barely indicated; bottom-view eye present but tiny",
+    "tentacular clubs of the upper specimen rendered as forked stubs, missing club expansion and sucker rings",
+    "fin shape on the upper specimen has a strange notched/spiked profile not in the photo",
+    "overall reads as a traced contour with noise rather than scientific plate ink work"
+  ],
+  "style_fidelity": 3
+}

@@ -114,12 +114,31 @@ Return JSON only. No markdown.
 
 def parse_judge_json(stdout: str) -> dict[str, Any]:
     match = re.search(r"\{[\s\S]*\}", stdout)
-    if not match:
+    candidates: list[str] = []
+    if match:
+        candidates.append(match.group(0))
+    else:
+        start = stdout.find("{")
+        if start >= 0:
+            candidate = stdout[start:].strip()
+            missing_braces = candidate.count("{") - candidate.count("}")
+            if missing_braces > 0:
+                candidate = f"{candidate}{'}' * missing_braces}"
+            candidates.append(candidate)
+    if not candidates:
         raise JudgeError("Claude judge did not return a JSON object", stdout=stdout)
-    try:
-        data = json.loads(match.group(0))
-    except json.JSONDecodeError as exc:
-        raise JudgeError(f"Claude judge returned malformed JSON: {exc}", stdout=stdout) from exc
+
+    last_error: json.JSONDecodeError | None = None
+    for candidate in candidates:
+        try:
+            data = json.loads(candidate)
+            break
+        except json.JSONDecodeError as exc:
+            last_error = exc
+    else:
+        assert last_error is not None
+        raise JudgeError(f"Claude judge returned malformed JSON: {last_error}", stdout=stdout) from last_error
+
     missing = REQUIRED_KEYS.difference(data)
     if missing:
         raise JudgeError(f"Claude judge JSON missing keys: {sorted(missing)}", stdout=stdout)

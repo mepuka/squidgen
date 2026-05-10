@@ -1,0 +1,17 @@
+{
+  "anatomy": 5,
+  "linework": 4,
+  "notes": "Recognisable as the same two-squid layout from the photo but rendered as a noisy edge-trace rather than a clean FAO ink plate.",
+  "silhouette_match": 6,
+  "specific_issues": [
+    "broken silhouette with many floating contour fragments inside the body",
+    "photo-trace clutter instead of disciplined single-weight ink",
+    "no ring-shaped suckers along the arms",
+    "tentacular clubs only vaguely indicated, no clear club outline",
+    "stipple is randomly scattered rather than concentrated in chromatophore fields",
+    "fin edges fragmented rather than continuous",
+    "lateral-view eye reduced to a small blob without an almond outline",
+    "arm tips and tentacle ends look like noisy outlines, not solid contours"
+  ],
+  "style_fidelity": 4
+}

@@ -1,0 +1,17 @@
+{
+  "anatomy": 1,
+  "linework": 2,
+  "notes": "Output is fragmented edge-detection noise that fails to resolve any of the squids in the photo into a coherent FAO-style line drawing.",
+  "silhouette_match": 2,
+  "specific_issues": [
+    "no continuous fin-mantle silhouette anywhere in the image",
+    "broken, disconnected line fragments scattered across the canvas",
+    "no recognizable mantle, fin, head, arms, or tentacles",
+    "stipple is randomly distributed rather than tracking the photo's chromatophore fields",
+    "small filled 'eye' circles placed on empty mantle interior, not on heads",
+    "appears to be raw edge-trace clutter rather than a scientific plate",
+    "input shows 4-5 squids but output presents no countable subjects",
+    "violates FAO single-weight clean-line restraint"
+  ],
+  "style_fidelity": 2
+}

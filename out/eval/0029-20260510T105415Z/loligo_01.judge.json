@@ -1,0 +1,16 @@
+{
+  "anatomy": 3,
+  "linework": 5,
+  "notes": "Clean single-weight ink with FAO-like restraint, but the silhouette flattens into a manta/fish shape and the arm crown is collapsed so it does not read as this specific Loligo.",
+  "silhouette_match": 4,
+  "specific_issues": [
+    "mantle+fin outline merged into a single manta-like wing instead of the photo's rhomboidal fin lobes flanking a tubular mantle",
+    "arm crown collapsed \u2014 cannot resolve 8 distinct arms with the fanned arrangement seen in the photo",
+    "long tentacles present but upper tentacle routes through the head/mantle region rather than arcing cleanly above it as in the photo",
+    "stipple scattered uniformly along the contour rather than concentrated in the dense chromatophore band running along the dorsal mantle",
+    "ring suckers only sporadically indicated on a couple of arms; absent on most appendages",
+    "small extraneous floating dots and a stray rectangle near the head read as trace noise, not scientific stipple",
+    "head/mantle proportion off \u2014 head region appears too small and lobed compared to the photo"
+  ],
+  "style_fidelity": 4
+}

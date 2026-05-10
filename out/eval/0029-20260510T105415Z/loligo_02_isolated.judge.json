@@ -1,0 +1,18 @@
+{
+  "anatomy": 2,
+  "linework": 5,
+  "notes": "Sparse stipple linework reads vaguely FAO-like, but the output reduces the photo to three generic mantle blobs with no arms, tentacles, or proper heads, failing the silhouette gate.",
+  "silhouette_match": 2,
+  "specific_issues": [
+    "arms and tentacles entirely missing on all three figures",
+    "eyes missing or vestigial on two of three figures",
+    "no head/funnel separation from mantle \u2014 heads are absent",
+    "fins not delineated; mantle outlines are simple ovals",
+    "only three figures rendered though photo shows four-plus squid",
+    "no suckers, no hectocotylus, no arm crowns",
+    "one figure has stray scribble where eye should be (tentacle stub artifact)",
+    "stipple distribution is uniform rather than tracking the photo's chromatophore patches",
+    "silhouette is generic cephalopod mantle, not the specific Loligo pose from the photo"
+  ],
+  "style_fidelity": 3
+}

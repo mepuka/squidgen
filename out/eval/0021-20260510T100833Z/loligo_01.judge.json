@@ -1,0 +1,17 @@
+{
+  "anatomy": 3,
+  "linework": 4,
+  "notes": "Silhouette roughly tracks the photo's mantle and right-side arms but omits the two long looping tentacles arcing back across the body, and the linework is jagged with random noise stipple rather than confident FAO-plate ink.",
+  "silhouette_match": 5,
+  "specific_issues": [
+    "missing the two long feeding tentacles that loop up-left and down-left across the mantle in the photo",
+    "fin/mantle outline is lumpy and wobbly rather than a clean continuous curve",
+    "stipple is random scatter, not concentrated in chromatophore fields visible on the photo",
+    "no ring-shaped suckers indicated along the arms",
+    "eye is a small dot but lacks the almond outline characteristic of FAO plates",
+    "small detached island marks inside the body read as photo-trace clutter",
+    "arms terminate in ragged blobby shapes instead of tapered tips with suckers",
+    "overall reads as a rough auto-trace, not a scientific plate"
+  ],
+  "style_fidelity": 4
+}

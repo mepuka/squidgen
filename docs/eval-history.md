@@ -29,6 +29,7 @@ contact sheets because those contain source/reference imagery.
 | 18 | 20260510T074600Z | 3.00 | 2 | 5.33 | 4 | Tested external-only silhouette contours; silhouette held but style regressed, setting not kept. |
 | 19 | 20260510T075038Z | 3.33 | 2 | 5.33 | 4 | Tested connected shadow-field stipple; stock fixture gained clutter, setting not kept. |
 | 20 | 20260510T075621Z | 2.67 | 2 | 3.33 | 1 | Tested removing synthetic split cut-edges; broke closed silhouettes, setting not kept. |
+| 21 | 20260510T100833Z | 3.33 | 2 | 3.67 | 2 | Tested thinning interior photo edges to centerlines; cleaner lines but lost anatomy, setting not kept. |
 
 ## Iteration 1
 
@@ -149,3 +150,9 @@ contact sheets because those contain source/reference imagery.
 - [loligo_01.svg](../out/eval/0020-20260510T075621Z/loligo_01.svg) · [png](../out/eval/0020-20260510T075621Z/loligo_01.png) · [judge](../out/eval/0020-20260510T075621Z/loligo_01.judge.json)
 - [loligo_02_isolated.svg](../out/eval/0020-20260510T075621Z/loligo_02_isolated.svg) · [png](../out/eval/0020-20260510T075621Z/loligo_02_isolated.png) · [judge](../out/eval/0020-20260510T075621Z/loligo_02_isolated.judge.json)
 - [loligo_03.svg](../out/eval/0020-20260510T075621Z/loligo_03.svg) · [png](../out/eval/0020-20260510T075621Z/loligo_03.png) · [judge](../out/eval/0020-20260510T075621Z/loligo_03.judge.json)
+
+## Iteration 21
+
+- [loligo_01.svg](../out/eval/0021-20260510T100833Z/loligo_01.svg) · [png](../out/eval/0021-20260510T100833Z/loligo_01.png) · [judge](../out/eval/0021-20260510T100833Z/loligo_01.judge.json)
+- [loligo_02_isolated.svg](../out/eval/0021-20260510T100833Z/loligo_02_isolated.svg) · [png](../out/eval/0021-20260510T100833Z/loligo_02_isolated.png) · [judge](../out/eval/0021-20260510T100833Z/loligo_02_isolated.judge.json)
+- [loligo_03.svg](../out/eval/0021-20260510T100833Z/loligo_03.svg) · [png](../out/eval/0021-20260510T100833Z/loligo_03.png) · [judge](../out/eval/0021-20260510T100833Z/loligo_03.judge.json)

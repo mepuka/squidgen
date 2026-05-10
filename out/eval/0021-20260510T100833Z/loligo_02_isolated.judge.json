@@ -1,0 +1,19 @@
+{
+  "anatomy": 2,
+  "linework": 4,
+  "notes": "Three crude horizontal blob outlines that fail to capture the four-squid pile, the arms/tentacles, the head-mantle separation, or the eye placement of the input photo.",
+  "silhouette_match": 2,
+  "specific_issues": [
+    "wrong number of squid bodies (3 vs 4 in photo)",
+    "squid oriented horizontally rather than the diagonal pile in the photo",
+    "no arms or tentacles drawn at all",
+    "no funnel or distinct head separation from mantle",
+    "eyes reduced to tiny dots, mispositioned and not almond-shaped",
+    "fins not articulated as distinct shapes",
+    "stipple is sparse but randomly placed, not following the chromatophore fields visible on the photo's mantles",
+    "silhouettes are generic loaf-shaped outlines, not traced from the photo's actual contours",
+    "missing the dangling arm clusters on the right side of the photo",
+    "reads as a procedural template rather than a render of this specific photo"
+  ],
+  "style_fidelity": 2
+}

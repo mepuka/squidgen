@@ -1,0 +1,17 @@
+{
+  "anatomy": 3,
+  "linework": 5,
+  "notes": "Two-view layout follows the photo but the arms are fused into blobby mitten shapes and the dorsal fin reads as forked antlers rather than the photo's broad rhomboid fin.",
+  "silhouette_match": 4,
+  "specific_issues": [
+    "arms and tentacles merged into undifferentiated lobes instead of 8+2 distinct appendages",
+    "no ring suckers drawn along arms",
+    "top-view fin rendered as two pointed projections instead of the broad continuous rhomboid in the photo",
+    "stipple is scattered noise rather than tracking the chromatophore field along the mantle midline",
+    "stray short squiggle marks across the body read as photo-trace clutter, not FAO restraint",
+    "lateral fin curl from the photo is missing/flattened",
+    "tentacular clubs not distinguished from arms; no club expansion at tips",
+    "broken/jagged silhouette at arm bases on both views"
+  ],
+  "style_fidelity": 4
+}

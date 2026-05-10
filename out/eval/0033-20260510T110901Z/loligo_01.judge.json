@@ -1,0 +1,16 @@
+{
+  "anatomy": 5,
+  "linework": 6,
+  "notes": "Recognizably this specific squid in the same flared-fins pose with both long tentacles and the splayed arm crown, rendered with restrained FAO-style linework but the arms lack differentiation and the stipple looks scattered rather than tied to chromatophore fields.",
+  "silhouette_match": 7,
+  "specific_issues": [
+    "arm crown reads as a chunky undifferentiated mass rather than 8 individually drawn arms",
+    "no ring-shaped suckers along arms or tentacular clubs",
+    "eye is a minimal dot rather than the clear almond+pupil seen in FAO plates",
+    "stipple is randomly scattered rather than concentrated in the orange chromatophore field on the dorsal mantle",
+    "stray stipple dots appear outside the silhouette outline",
+    "tentacular club tips lack the toothed/suckered detail visible in the photo",
+    "fin edge on the left is slightly lumpy/undulating rather than the smooth rhomboid in the photo"
+  ],
+  "style_fidelity": 6
+}

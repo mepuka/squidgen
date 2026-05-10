@@ -1,0 +1,16 @@
+{
+  "anatomy": 3,
+  "linework": 4,
+  "notes": "Recognisably the same squid in the same orientation but distorted, with both long tentacles dropped and a noisy fragmented outline that breaks the FAO single-weight ink feel.",
+  "silhouette_match": 4,
+  "specific_issues": [
+    "both long tentacles from the photo (the one arching up over the mantle and the one trailing below) are entirely missing",
+    "arms reduced to short stubs with no ring suckers",
+    "mantle/fin proportions distorted \u2014 fin reads as a separate triangular wing rather than the continuous lateral fin in the photo",
+    "outline is jagged and broken instead of a clean continuous silhouette",
+    "stipple is sparse and scattered, not following the dense chromatophore field visible on the mantle in the photo",
+    "edge noise and floating speckles read as photo-trace artifacts rather than scientific plate restraint",
+    "eye marked but head region collapsed so arm crown geometry is unclear"
+  ],
+  "style_fidelity": 4
+}

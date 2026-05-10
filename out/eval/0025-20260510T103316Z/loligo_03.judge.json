@@ -1,0 +1,17 @@
+{
+  "anatomy": 3,
+  "linework": 4,
+  "notes": "Two-pose layout matches the photo and the mantle/fin silhouette is recognisable, but arms collapse into clumped masses with noisy trace clutter rather than the clean separated arms and sucker rings expected in an FAO plate.",
+  "silhouette_match": 5,
+  "specific_issues": [
+    "arms merged into undifferentiated clumps in both views",
+    "tentacular clubs not resolved as distinct shapes",
+    "no ring suckers drawn along arms",
+    "top dorsal view is missing an eye",
+    "jittery broken outline with many small squiggle artifacts",
+    "interior of mantle cluttered with photo-trace fragments instead of restrained stipple",
+    "fin/mantle junction edge is fragmented rather than continuous",
+    "bottom view arms fused into a single shape with stripe artifacts"
+  ],
+  "style_fidelity": 4
+}

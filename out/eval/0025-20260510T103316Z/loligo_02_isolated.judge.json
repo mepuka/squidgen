@@ -1,0 +1,17 @@
+{
+  "anatomy": 3,
+  "linework": 3,
+  "notes": "Mantle outlines roughly trace a few of the photo's squid but the count is reduced, arms/tentacles are largely missing, and the interior is filled with fragmented photo-trace clutter rather than disciplined FAO stipple.",
+  "silhouette_match": 4,
+  "specific_issues": [
+    "only 3 mantles depicted vs ~5 squid in input photo",
+    "arms and tentacles essentially missing on all subjects",
+    "no ring-shaped suckers anywhere",
+    "interior covered in broken short stroke clutter (photo-trace artifacts) rather than sparse meaningful stipple",
+    "eyes rendered too small with weak almond shape",
+    "outline of bottom mantle is incomplete/broken on the right side",
+    "fin contours not clearly resolved into the FAO-style continuous fin-mantle silhouette",
+    "head/arm crown geometry not articulated like an FAO ventral or lateral view"
+  ],
+  "style_fidelity": 4
+}

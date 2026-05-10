@@ -1,0 +1,17 @@
+{
+  "anatomy": 2,
+  "linework": 5,
+  "notes": "Captures three of four mantle silhouettes from the photo but omits the heads, arms, tentacles, and fins, leaving an incomplete drawing rather than a faithful FAO-style rendering of this specific image.",
+  "silhouette_match": 3,
+  "specific_issues": [
+    "only 3 of 4 squid drawn (fourth squid missing)",
+    "arms and tentacles essentially absent \u2014 just stubby nubs on the right",
+    "fins not delineated as separate shapes from mantle",
+    "no ring suckers anywhere",
+    "eyes placed but inconsistent across rows (one row has no clear eye)",
+    "stipple is extremely sparse and does not map to chromatophore/shadow fields in the photo",
+    "interior detail reads as random edge fragments rather than scientific stipple",
+    "head/funnel area on right side is shapeless"
+  ],
+  "style_fidelity": 3
+}

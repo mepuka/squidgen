@@ -1,0 +1,18 @@
+{
+  "anatomy": 4,
+  "linework": 4,
+  "notes": "Outline traces the two specimens from the input photo and matches the overall pose, but arms are fused into blobby masses, eye is tiny, and the interior reads as scattered noise rather than disciplined FAO stipple.",
+  "silhouette_match": 6,
+  "specific_issues": [
+    "arms fused into clumped paddle-shaped masses instead of separated tapering arms",
+    "tentacles not distinguishable from arms in the upper specimen",
+    "stipple is sparse, scattered, and randomly placed rather than concentrated in chromatophore fields",
+    "interior contains noisy disconnected line fragments that read as photo-trace clutter",
+    "eye rendered as a tiny mark with no almond shape or clear pupil placement",
+    "no ring-shaped suckers along the arms",
+    "fin outline on lower specimen is broken and merges awkwardly with mantle",
+    "head/mantle junction lacks the dark chromatophore band visible in the photo",
+    "linework is wobbly and inconsistent rather than clean single-weight ink"
+  ],
+  "style_fidelity": 4
+}

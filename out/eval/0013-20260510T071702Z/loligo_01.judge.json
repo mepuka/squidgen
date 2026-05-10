@@ -1,0 +1,16 @@
+{
+  "anatomy": 5,
+  "linework": 4,
+  "notes": "Recognisable trace of this specific squid's pose with mantle, fins, splayed arms and two long tentacles, but linework is fragmented and stipple is scattered noise rather than restrained FAO shading.",
+  "silhouette_match": 7,
+  "specific_issues": [
+    "broken/discontinuous mantle and fin outline rather than single clean silhouette",
+    "stipple appears as scattered photo-trace noise, not concentrated chromatophore fields",
+    "eye is barely indicated \u2014 no clear almond shape with filled pupil at the photo's eye location",
+    "sucker rings along arms and tentacle clubs are mostly missing or rendered as random dots",
+    "fin-mantle junction has duplicated/parallel edges instead of one confident contour",
+    "arm tips and tentacle clubs lack the structured club-with-suckers detail seen in the photo",
+    "overall reads as edge-detected photo trace rather than scientific plate restraint"
+  ],
+  "style_fidelity": 5
+}

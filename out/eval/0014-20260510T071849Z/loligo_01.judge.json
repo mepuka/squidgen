@@ -1,0 +1,15 @@
+{
+  "anatomy": 6,
+  "linework": 5,
+  "notes": "Recognizably the same Loligo from the photo with fin, mantle and tentacle arrangement preserved, but linework is double-traced and noisy with weak eye and no sucker rings.",
+  "silhouette_match": 7,
+  "specific_issues": [
+    "double-traced jagged silhouette instead of single continuous contour",
+    "photo-trace noise along mantle and arm edges",
+    "eye reduced to tiny dot, not almond with filled pupil",
+    "no ring-suckers indicated on arms or tentacular clubs",
+    "arm/tentacle interior detail collapses into blobby contours",
+    "stipple is scattered rather than concentrated in chromatophore fields"
+  ],
+  "style_fidelity": 5
+}

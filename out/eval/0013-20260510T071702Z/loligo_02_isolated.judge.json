@@ -1,0 +1,18 @@
+{
+  "anatomy": 2,
+  "linework": 3,
+  "notes": "Output reduces the photo to three blob-like mantle silhouettes with missing arms, missing tentacles, and chaotic interior noise that bears little resemblance to the input squid.",
+  "silhouette_match": 2,
+  "specific_issues": [
+    "arms and tentacles entirely missing from every squid",
+    "photo shows ~4-5 squid but only 3 partial mantles drawn",
+    "heads not articulated \u2014 fused into the mantle outline",
+    "eyes are tiny dots, not almond-shaped with filled pupil",
+    "interior covered in jagged photo-trace fragments rather than sparse FAO-style stipple",
+    "fins not delineated as a separate clean silhouette",
+    "no ring suckers or any arm detail",
+    "silhouettes are stacked/cropped, not faithfully matching the input layout",
+    "overall reads as a failed photo edge-trace, not an FAO scientific plate"
+  ],
+  "style_fidelity": 2
+}

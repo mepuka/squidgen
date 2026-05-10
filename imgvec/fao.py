@@ -72,6 +72,8 @@ def render_fao_svg(
     outline_lines = [line for subject_mask in subject_masks for line in _silhouette_lines(subject_mask, profile)]
     appendage_lines = _appendage_centerlines(mask, profile)
     detail_lines = _interior_edge_lines(rgb, mask, profile)
+    if source_border_gray < 90.0 or source_border_gray >= 245.0:
+        detail_lines.extend(_dark_ridge_lines(rgb, mask, profile))
     eye_masks = _eye_subject_masks(subject_masks)
     line_layers = [
         ("outline", _sort_polylines(outline_lines)),
@@ -450,6 +452,50 @@ def _interior_edge_lines(rgb: np.ndarray, mask: np.ndarray, profile: Profile) ->
 
     candidates.sort(key=lambda item: item[0], reverse=True)
     return [line for _, line in candidates[: profile.max_edge_lines]]
+
+
+def _dark_ridge_lines(rgb: np.ndarray, mask: np.ndarray, profile: Profile) -> list[list[Point]]:
+    gray = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY).astype(np.float32)
+    hsv = cv2.cvtColor(rgb, cv2.COLOR_RGB2HSV).astype(np.float32)
+    dist = cv2.distanceTransform(mask.astype(np.uint8), cv2.DIST_L2, 5)
+    support = ((mask > 0) & (dist > 2.0)).astype(np.uint8)
+    if not np.any(support):
+        return []
+
+    darkness = (255.0 - gray) / 255.0
+    saturation = hsv[:, :, 1] / 255.0
+    ridge_weight = np.clip(darkness * 0.58 + saturation * 0.42, 0.0, 1.0)
+    values = ridge_weight[support > 0]
+    if values.size == 0:
+        return []
+    threshold = max(0.20, float(np.quantile(values, 0.91)))
+    ridges = ((ridge_weight >= threshold) & (support > 0)).astype(np.uint8)
+    ridges = cv2.morphologyEx(ridges, cv2.MORPH_OPEN, np.ones((2, 2), np.uint8), iterations=1)
+    ridges = cv2.morphologyEx(ridges, cv2.MORPH_CLOSE, np.ones((5, 2), np.uint8), iterations=1)
+    ridges = cv2.morphologyEx(ridges, cv2.MORPH_CLOSE, np.ones((2, 5), np.uint8), iterations=1)
+    contours, _ = cv2.findContours(ridges, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
+
+    candidates: list[tuple[float, list[Point]]] = []
+    for contour in contours:
+        if len(contour) < 18:
+            continue
+        length = cv2.arcLength(contour, False)
+        if length < max(70.0, profile.min_edge_length * 1.4):
+            continue
+        area = abs(cv2.contourArea(contour))
+        x, y, w, h = cv2.boundingRect(contour)
+        aspect = max(w, h) / max(1, min(w, h))
+        if aspect < 2.2 and area > 90:
+            continue
+        if area > 520:
+            continue
+        approx = cv2.approxPolyDP(contour, profile.edge_epsilon * 1.2, False).reshape(-1, 2)
+        line = [(float(x), float(y)) for x, y in approx]
+        if len(line) >= 2:
+            candidates.append((length, line))
+
+    candidates.sort(key=lambda item: item[0], reverse=True)
+    return [line for _, line in candidates[:45]]
 
 
 def _appendage_centerlines(mask: np.ndarray, profile: Profile) -> list[list[Point]]:

@@ -21,6 +21,8 @@ contact sheets because those contain source/reference imagery.
 | 10 | 20260510T065943Z | 4.00 | 4 | 6.00 | 6 | Partial run with one malformed judge response; useful signal but not a valid full pass. |
 | 11 | 20260510T070310Z | 3.00 | 3 | 5.33 | 4 | Added tolerant judge parsing and reran cleanly; scores dropped under full judging. |
 | 12 | 20260510T070848Z | 3.67 | 3 | 4.67 | 4 | Tuned bolder ink, smoother outlines, larger eyes/rings, and sparser stipple. |
+| 13 | 20260510T071702Z | 3.67 | 2 | 5.00 | 2 | Tested dark ridge layer; helped detail on some fixtures but hurt the stock image floor. |
+| 14 | 20260510T071849Z | 4.00 | 3 | 5.33 | 3 | Kept ridge layer only for dark/pure-white backgrounds; best clean pass so far. |
 
 ## Iteration 1
 
@@ -93,3 +95,15 @@ contact sheets because those contain source/reference imagery.
 - [loligo_01.svg](../out/eval/0012-20260510T070848Z/loligo_01.svg) · [png](../out/eval/0012-20260510T070848Z/loligo_01.png) · [judge](../out/eval/0012-20260510T070848Z/loligo_01.judge.json)
 - [loligo_02_isolated.svg](../out/eval/0012-20260510T070848Z/loligo_02_isolated.svg) · [png](../out/eval/0012-20260510T070848Z/loligo_02_isolated.png) · [judge](../out/eval/0012-20260510T070848Z/loligo_02_isolated.judge.json)
 - [loligo_03.svg](../out/eval/0012-20260510T070848Z/loligo_03.svg) · [png](../out/eval/0012-20260510T070848Z/loligo_03.png) · [judge](../out/eval/0012-20260510T070848Z/loligo_03.judge.json)
+
+## Iteration 13
+
+- [loligo_01.svg](../out/eval/0013-20260510T071702Z/loligo_01.svg) · [png](../out/eval/0013-20260510T071702Z/loligo_01.png) · [judge](../out/eval/0013-20260510T071702Z/loligo_01.judge.json)
+- [loligo_02_isolated.svg](../out/eval/0013-20260510T071702Z/loligo_02_isolated.svg) · [png](../out/eval/0013-20260510T071702Z/loligo_02_isolated.png) · [judge](../out/eval/0013-20260510T071702Z/loligo_02_isolated.judge.json)
+- [loligo_03.svg](../out/eval/0013-20260510T071702Z/loligo_03.svg) · [png](../out/eval/0013-20260510T071702Z/loligo_03.png) · [judge](../out/eval/0013-20260510T071702Z/loligo_03.judge.json)
+
+## Iteration 14
+
+- [loligo_01.svg](../out/eval/0014-20260510T071849Z/loligo_01.svg) · [png](../out/eval/0014-20260510T071849Z/loligo_01.png) · [judge](../out/eval/0014-20260510T071849Z/loligo_01.judge.json)
+- [loligo_02_isolated.svg](../out/eval/0014-20260510T071849Z/loligo_02_isolated.svg) · [png](../out/eval/0014-20260510T071849Z/loligo_02_isolated.png) · [judge](../out/eval/0014-20260510T071849Z/loligo_02_isolated.judge.json)
+- [loligo_03.svg](../out/eval/0014-20260510T071849Z/loligo_03.svg) · [png](../out/eval/0014-20260510T071849Z/loligo_03.png) · [judge](../out/eval/0014-20260510T071849Z/loligo_03.judge.json)

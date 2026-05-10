@@ -1,0 +1,17 @@
+{
+  "anatomy": 5,
+  "linework": 5,
+  "notes": "Silhouette roughly tracks the photo's dorsal-view pose with mantle, fins, head and the two long tentacles in the right places, but linework is broken and stipple is scattered noise rather than concentrated chromatophore shading.",
+  "silhouette_match": 6,
+  "specific_issues": [
+    "outline has small breaks and stippled noise along the silhouette edge",
+    "stipple is randomly distributed rather than concentrated in the orange chromatophore band on the mantle",
+    "arms render as smooth blobs with no ring-shaped suckers",
+    "tentacular clubs not articulated \u2014 no sucker detail at the club tips visible in the photo",
+    "eye is a tiny dot rather than an almond with a filled pupil",
+    "fin shape is blocky/angular rather than the soft rhomboidal fin in the photo",
+    "head/arm crown reads as a five-pointed star rather than a clear arm crown with eight arms plus two tentacles",
+    "interior fin/mantle boundary line is fragmented"
+  ],
+  "style_fidelity": 5
+}

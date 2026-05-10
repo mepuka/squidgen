@@ -1,0 +1,16 @@
+{
+  "anatomy": 5,
+  "linework": 4,
+  "notes": "Two-specimen layout and overall silhouette track the input photo, but interior detail is noisy edge-trace clutter rather than scientific stipple, and arms lack clean articulation or ring suckers.",
+  "silhouette_match": 7,
+  "specific_issues": [
+    "noisy photo-trace fragments scattered inside mantle instead of clean stipple",
+    "no ring-shaped suckers along arms",
+    "eye on top (dorsal) specimen missing/unclear",
+    "arm contours fragmented and broken rather than continuous",
+    "arms on right blur into a tangled mass with poor individual definition",
+    "small disconnected outline shards floating outside main silhouette",
+    "fin-mantle junction renders as a hard step rather than a smooth FAO-style transition"
+  ],
+  "style_fidelity": 4
+}

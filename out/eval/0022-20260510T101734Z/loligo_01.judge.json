@@ -1,0 +1,17 @@
+{
+  "anatomy": 4,
+  "linework": 4,
+  "notes": "Pose and orientation roughly match the photo but the silhouette is a noisy edge-trace with distorted mantle proportions and no proper anatomical detail.",
+  "silhouette_match": 5,
+  "specific_issues": [
+    "mantle silhouette is elongated and pointed like a fish/kite rather than the rounded Loligo posterior in the photo",
+    "fin outline is jagged and discontinuous, not a clean continuous curve",
+    "no almond-shaped eye with filled pupil rendered at the head",
+    "no ring suckers drawn along the arms",
+    "stipple is scattered noise rather than concentrated chromatophore fields matching the photo",
+    "outline shows raster edge-detection artifacts (broken segments, double lines, dotted edges) instead of single-weight ink",
+    "arms read as flat tapered blades without the curling tentacle clubs visible in the photo",
+    "small spurious circles and marks scattered across the body resemble trace clutter rather than scientific stipple"
+  ],
+  "style_fidelity": 4
+}

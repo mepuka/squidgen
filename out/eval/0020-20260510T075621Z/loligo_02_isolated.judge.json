@@ -1,0 +1,17 @@
+{
+  "anatomy": 1,
+  "linework": 2,
+  "notes": "The output is a chaotic photo-trace of multiple overlapping squid bodies on a tray rather than a single FAO-style cephalopod plate matching the input.",
+  "silhouette_match": 1,
+  "specific_issues": [
+    "traces the entire multi-squid photo as one blob instead of isolating one specimen",
+    "no recognizable mantle/fin/arm anatomy \u2014 appears as horizontal smear",
+    "missing tentacles and arms; arms not individuated",
+    "multiple eye marks scattered along the side rather than one eye on the head",
+    "broken, fragmented interior linework (noisy edge-detection artifacts)",
+    "no fin silhouette visible",
+    "silhouette does not match a single squid's outline",
+    "no FAO-style scientific restraint \u2014 reads as raw edge-trace clutter"
+  ],
+  "style_fidelity": 2
+}

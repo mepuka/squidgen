@@ -1,0 +1,18 @@
+{
+  "anatomy": 2,
+  "linework": 2,
+  "notes": "Output reads as a noisy edge-detection trace of a few mantles rather than an FAO-style ink rendering of these specific squid.",
+  "silhouette_match": 4,
+  "specific_issues": [
+    "only 3 mantle silhouettes shown but the photo has 4 squid",
+    "arms and tentacles essentially missing \u2014 no recognizable arm crown or tentacular clubs",
+    "no ring suckers depicted anywhere",
+    "fins barely indicated; clean fin-mantle silhouette absent on most bodies",
+    "interior is filled with broken disconnected edge fragments, not sparse stipple",
+    "eyes are tiny dots rather than almond eye with filled pupil",
+    "linework is fragmented and varies as edge-detector output instead of single-weight ink",
+    "reads as photo-trace clutter rather than FAO scientific plate restraint",
+    "head/arm region on the right is illegible scribble rather than anatomy"
+  ],
+  "style_fidelity": 2
+}

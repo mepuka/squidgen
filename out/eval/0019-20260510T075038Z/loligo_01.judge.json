@@ -1,0 +1,17 @@
+{
+  "anatomy": 4,
+  "linework": 3,
+  "notes": "Recognizably the same posed squid but rendered as jagged photo-traced edges with scattered noise rather than clean FAO ink linework.",
+  "silhouette_match": 5,
+  "specific_issues": [
+    "broken jagged silhouette from edge-trace artifacts",
+    "long whip tentacles from the photo are missing/truncated",
+    "stipple is scattered noise, not concentrated in chromatophore fields",
+    "no ring suckers along the arms",
+    "eye is a tiny mark rather than an almond with filled pupil",
+    "double/parallel outline echoes around the mantle and fins",
+    "arms appear merged and reduced in count versus the photo",
+    "lacks single-weight continuous ink contour characteristic of FAO plates"
+  ],
+  "style_fidelity": 3
+}

@@ -34,6 +34,7 @@ contact sheets because those contain source/reference imagery.
 | 23 | 20260510T102454Z | 2.67 | 2 | 5.00 | 4 | Tested light mask smoothing for outlines; silhouette held but style and anatomy regressed, setting not kept. |
 | 24 | 20260510T102855Z | 4.33 | 3 | 5.67 | 5 | Replaced random grid stipple with photo-derived chromatophore components; new best baseline. |
 | 25 | 20260510T103316Z | 4.00 | 4 | 4.33 | 4 | Tested drawing stipple below rings and eyes; style floor rose but anatomy/silhouette regressed, setting not kept. |
+| 26 | 20260510T103825Z | 4.00 | 3 | 5.00 | 4 | Tested looser appendage centerlines; added clutter without recovering tentacles, setting not kept. |
 
 ## Iteration 1
 
@@ -184,3 +185,9 @@ contact sheets because those contain source/reference imagery.
 - [loligo_01.svg](../out/eval/0025-20260510T103316Z/loligo_01.svg) · [png](../out/eval/0025-20260510T103316Z/loligo_01.png) · [judge](../out/eval/0025-20260510T103316Z/loligo_01.judge.json)
 - [loligo_02_isolated.svg](../out/eval/0025-20260510T103316Z/loligo_02_isolated.svg) · [png](../out/eval/0025-20260510T103316Z/loligo_02_isolated.png) · [judge](../out/eval/0025-20260510T103316Z/loligo_02_isolated.judge.json)
 - [loligo_03.svg](../out/eval/0025-20260510T103316Z/loligo_03.svg) · [png](../out/eval/0025-20260510T103316Z/loligo_03.png) · [judge](../out/eval/0025-20260510T103316Z/loligo_03.judge.json)
+
+## Iteration 26
+
+- [loligo_01.svg](../out/eval/0026-20260510T103825Z/loligo_01.svg) · [png](../out/eval/0026-20260510T103825Z/loligo_01.png) · [judge](../out/eval/0026-20260510T103825Z/loligo_01.judge.json)
+- [loligo_02_isolated.svg](../out/eval/0026-20260510T103825Z/loligo_02_isolated.svg) · [png](../out/eval/0026-20260510T103825Z/loligo_02_isolated.png) · [judge](../out/eval/0026-20260510T103825Z/loligo_02_isolated.judge.json)
+- [loligo_03.svg](../out/eval/0026-20260510T103825Z/loligo_03.svg) · [png](../out/eval/0026-20260510T103825Z/loligo_03.png) · [judge](../out/eval/0026-20260510T103825Z/loligo_03.judge.json)

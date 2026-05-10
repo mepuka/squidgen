@@ -1,0 +1,18 @@
+{
+  "anatomy": 4,
+  "linework": 4,
+  "notes": "Two-view silhouettes roughly track the input photo's dorsal and lateral squid layout but arms are merged into clumpy blobs with photo-trace clutter and no clean ring suckers.",
+  "silhouette_match": 6,
+  "specific_issues": [
+    "arms fused into broad blobs rather than discrete tapered limbs",
+    "no ring suckers \u2014 tentacle clubs unreadable",
+    "eye on dorsal view missing; lateral eye is a tiny scribble rather than an almond with pupil",
+    "photo-trace noise: short broken edge fragments inside the body instead of clean contours",
+    "stipple is patchy and concentrated in wrong fields (mid-mantle band) rather than tracking the photo's chromatophore distribution",
+    "fin outline on dorsal view is plausible but lateral view fin is a thin sliver and broken",
+    "no head-mantle junction line / nuchal detail",
+    "extra small spur shapes on tentacle tips that don't correspond to the photo",
+    "overall reads like a noisy auto-traced edge map rather than an FAO plate"
+  ],
+  "style_fidelity": 5
+}

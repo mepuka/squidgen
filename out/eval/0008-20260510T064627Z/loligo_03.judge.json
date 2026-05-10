@@ -1,0 +1,19 @@
+{
+  "anatomy": 2,
+  "linework": 3,
+  "notes": "Generated output reads as a distorted blob trace rather than a faithful FAO-style rendering of the two-view Loligo photo \u2014 arms, tentacles, and fins are not resolved.",
+  "silhouette_match": 2,
+  "specific_issues": [
+    "arms and tentacles fused into amorphous mass instead of 8+2 differentiated appendages visible in the photo",
+    "dorsal-view fins not rendered as the wide diamond/fan shape from the input",
+    "lateral-view body lacks defined arm crown \u2014 appears as a vague whale-like silhouette",
+    "no ring suckers indicated along arms",
+    "eye in lateral view is a small dot rather than the almond eye with chromatophore halo in the photo",
+    "anomalous tail-like protrusion on top form not present in input",
+    "stipple sparse and unfocused \u2014 does not concentrate in the chromatophore/shadow fields seen in the photo",
+    "fragmented sketchy contour lines along body create noise rather than clean single-weight FAO linework",
+    "mantle proportions distorted; head/mantle junction not defined as in the photo",
+    "overall reads as generic procedural outline, not this specific specimen"
+  ],
+  "style_fidelity": 2
+}

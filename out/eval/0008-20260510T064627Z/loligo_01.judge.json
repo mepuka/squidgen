@@ -1,0 +1,15 @@
+{
+  "anatomy": 6,
+  "linework": 5,
+  "notes": "Recognisably the same Loligo with correct mantle/fin/tentacle arrangement, but edges read as a noisy photo-trace and the arms lack the disciplined sucker rings of an FAO plate.",
+  "silhouette_match": 7,
+  "specific_issues": [
+    "jittery edge-traced outline rather than clean single-weight ink",
+    "no clear ring-shaped suckers along arms or tentacular clubs",
+    "fin contour fuzzy/double-traced in places",
+    "stipple pattern reads as edge-trace speckle rather than deliberate chromatophore field",
+    "tentacular club tips lack the characteristic suckered paddle detail",
+    "small breaks/dropouts in the mantle outline near the head"
+  ],
+  "style_fidelity": 5
+}

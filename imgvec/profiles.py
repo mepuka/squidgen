@@ -22,14 +22,14 @@ class Profile:
     stroke_width: float = 1.12
     silhouette_epsilon: float = 0.0016
     edge_epsilon: float = 1.25
-    min_edge_length: float = 28.0
-    max_edge_lines: int = 260
+    min_edge_length: float = 38.0
+    max_edge_lines: int = 155
     stipple_step: int = 6
-    stipple_strength: float = 0.42
-    max_stipple_dots: int = 3000
+    stipple_strength: float = 0.30
+    max_stipple_dots: int = 1500
     sucker_max: int = 180
-    sucker_min_radius: float = 2.4
-    sucker_max_radius: float = 8.2
+    sucker_min_radius: float = 3.2
+    sucker_max_radius: float = 10.5
     draw_eye: bool = True
     draw_centerline: bool = False
 

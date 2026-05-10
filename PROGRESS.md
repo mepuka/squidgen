@@ -4,3 +4,5 @@
 20260510T054851Z iteration=4 profile=fao_default fixtures=3 judged=3 style_mean=2.33 style_min=1 silhouette_mean=3.0 silhouette_min=1 last5_iter_mean=2.25 judge_errors=0
 20260510T062649Z iteration=5 profile=fao_default fixtures=3 judged=3 style_mean=3.0 style_min=1 silhouette_mean=3.67 silhouette_min=1 last5_iter_mean=2.4 judge_errors=0
 20260510T063333Z iteration=6 profile=fao_default fixtures=3 judged=3 style_mean=3.67 style_min=3 silhouette_mean=4.33 silhouette_min=3 last5_iter_mean=2.87 judge_errors=0
+20260510T064135Z iteration=7 profile=fao_default fixtures=3 judged=3 style_mean=3.33 style_min=3 silhouette_mean=4.33 silhouette_min=4 last5_iter_mean=3.13 judge_errors=0
+20260510T064627Z iteration=8 profile=fao_default fixtures=3 judged=3 style_mean=3.0 style_min=2 silhouette_mean=4.0 silhouette_min=2 last5_iter_mean=3.07 judge_errors=0

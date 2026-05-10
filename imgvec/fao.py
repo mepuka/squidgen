@@ -70,6 +70,7 @@ def render_fao_svg(
     outline_lines = [line for subject_mask in subject_masks for line in _silhouette_lines(subject_mask, profile)]
     appendage_lines = _appendage_centerlines(mask, profile)
     detail_lines = _interior_edge_lines(rgb, mask, profile)
+    eye_masks = _eye_subject_masks(subject_masks)
     line_layers = [
         ("outline", _sort_polylines(outline_lines)),
         ("appendage-centerlines", _sort_polylines(appendage_lines)),
@@ -78,11 +79,11 @@ def render_fao_svg(
     if profile.draw_centerline:
         line_layers.append(("body-centerline", _body_centerline(mask, profile)))
     if profile.draw_eye:
-        line_layers.append(("eye-outline", [line for subject_mask in subject_masks for line in _eye_lines(rgb, subject_mask, profile)]))
+        line_layers.append(("eye-outline", [line for subject_mask in eye_masks for line in _eye_lines(rgb, subject_mask, profile)]))
 
     dots = _stipple_dots(rgb, mask, profile)
     rings = _sucker_rings(rgb, mask, profile)
-    filled_circles = [pupil for subject_mask in subject_masks for pupil in _eye_pupils(rgb, subject_mask, profile)]
+    filled_circles = [pupil for subject_mask in eye_masks for pupil in _eye_pupils(rgb, subject_mask, profile)]
 
     drawing = SvgDrawing(
         width=float(width + profile.page_pad * 2),
@@ -203,10 +204,25 @@ def _repair_mask_from_photo(rgb: np.ndarray, alpha_mask: np.ndarray) -> np.ndarr
         photo_fg = (diff > 18.0) | (gray > bg_gray + 18.0) | (hsv[:, :, 1] > 24)
 
     photo_fg = cv2.morphologyEx(photo_fg.astype(np.uint8), cv2.MORPH_OPEN, np.ones((2, 2), np.uint8), iterations=1)
-    photo_fg = cv2.morphologyEx(photo_fg, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8), iterations=1)
-    alpha_near = cv2.dilate(alpha_mask.astype(np.uint8), np.ones((19, 19), np.uint8), iterations=1)
-    photo_fg = (photo_fg & alpha_near).astype(np.uint8)
-    return ((alpha_mask > 0) | (photo_fg > 0)).astype(np.uint8)
+    if bg_gray < 90:
+        photo_fg = cv2.morphologyEx(photo_fg, cv2.MORPH_CLOSE, np.ones((7, 7), np.uint8), iterations=2)
+    else:
+        photo_fg = cv2.morphologyEx(photo_fg, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8), iterations=1)
+
+    seed = cv2.dilate(alpha_mask.astype(np.uint8), np.ones((37, 37), np.uint8), iterations=1)
+    count, labels, stats, _ = cv2.connectedComponentsWithStats(photo_fg, 8)
+    kept = np.zeros_like(photo_fg, dtype=np.uint8)
+    for label in range(1, count):
+        component = labels == label
+        area = int(stats[label, cv2.CC_STAT_AREA])
+        if area < 12:
+            continue
+        if np.any(seed[component] > 0):
+            kept[component] = 1
+
+    if bg_gray < 90:
+        kept = cv2.morphologyEx(kept, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8), iterations=1)
+    return ((alpha_mask > 0) | (kept > 0)).astype(np.uint8)
 
 
 def _detail_mask_from_photo(rgb: np.ndarray, mask: np.ndarray) -> np.ndarray:
@@ -338,6 +354,32 @@ def _projection_split_rows(component: np.ndarray, y_offset: int) -> list[int]:
     if len(chosen) < 2:
         return []
     return [y_offset + idx for idx in chosen[:3]]
+
+
+def _eye_subject_masks(subject_masks: list[np.ndarray]) -> list[np.ndarray]:
+    if not subject_masks:
+        return []
+    areas = [int(mask.sum()) for mask in subject_masks]
+    largest = max(areas)
+    eye_masks: list[np.ndarray] = []
+    for mask, area in zip(subject_masks, areas):
+        if area < max(160, largest * 0.18):
+            continue
+        ys, xs = np.nonzero(mask)
+        if len(xs) == 0:
+            continue
+        width = int(xs.max() - xs.min() + 1)
+        height = int(ys.max() - ys.min() + 1)
+        if min(width, height) < 18:
+            continue
+        aspect = max(width, height) / max(1, min(width, height))
+        dist = cv2.distanceTransform(mask.astype(np.uint8), cv2.DIST_L2, 5)
+        if aspect > 5.5 and area < largest * 0.70:
+            continue
+        if aspect > 12.0 and float(dist.max()) < 18.0:
+            continue
+        eye_masks.append(mask)
+    return eye_masks or [subject_masks[int(np.argmax(areas))]]
 
 
 def _interior_edge_lines(rgb: np.ndarray, mask: np.ndarray, profile: Profile) -> list[list[Point]]:
@@ -525,8 +567,8 @@ def _stipple_dots(rgb: np.ndarray, mask: np.ndarray, profile: Profile) -> list[t
     masked = weight[mask > 0]
     if masked.size == 0:
         return []
-    floor = float(np.quantile(masked, 0.74))
-    floor = max(0.11, min(0.36, floor))
+    floor = float(np.quantile(masked, 0.84))
+    floor = max(0.16, min(0.46, floor))
 
     height, width = mask.shape
 
@@ -543,7 +585,7 @@ def _stipple_dots(rgb: np.ndarray, mask: np.ndarray, profile: Profile) -> list[t
                 continue
             threshold = profile.stipple_strength * ((w - floor) / max(0.001, 1.0 - floor)) ** 1.35
             if rng.random() < threshold:
-                radius = 0.35 + min(1.0, w * 1.15) + rng.uniform(-0.10, 0.12)
+                radius = 0.34 + min(0.92, w * 1.05) + rng.uniform(-0.08, 0.10)
                 dots.append((w, float(jx), float(jy), max(0.42, radius)))
 
     dots.sort(key=lambda item: item[0], reverse=True)
@@ -596,7 +638,7 @@ def _sucker_rings(rgb: np.ndarray, mask: np.ndarray, profile: Profile) -> list[t
         circularity = (4.0 * np.pi * area) / max(1.0, perimeter * perimeter)
         if circularity < 0.18:
             continue
-        radius = min(profile.sucker_max_radius, max(profile.sucker_min_radius, (area / np.pi) ** 0.5 * 0.85))
+        radius = min(profile.sucker_max_radius, max(profile.sucker_min_radius, (area / np.pi) ** 0.5 * 1.05))
         score = area * (0.55 + circularity) + max(0.0, 20.0 - float(dist[int(y), int(x)])) * 3.0
         rings.append((score, float(x), float(y), float(radius)))
 
@@ -644,6 +686,16 @@ def _eye_candidates(rgb: np.ndarray, mask: np.ndarray, profile: Profile) -> list
     count, labels, stats, centroids = cv2.connectedComponentsWithStats(dark, 8)
     candidates: list[tuple[float, float, float, float, float]] = []
     height, width = mask.shape
+    subject_ys, subject_xs = np.nonzero(mask)
+    if len(subject_xs) == 0:
+        return []
+    subject_x0 = int(subject_xs.min())
+    subject_x1 = int(subject_xs.max())
+    subject_y0 = int(subject_ys.min())
+    subject_y1 = int(subject_ys.max())
+    subject_w = max(1, subject_x1 - subject_x0 + 1)
+    subject_h = max(1, subject_y1 - subject_y0 + 1)
+    landscape_subject = subject_w / subject_h > 1.45
     min_area = max(8, int(mask.sum() * 0.00002))
     max_area = max(220, int(mask.sum() * 0.006))
     for label in range(1, count):
@@ -658,6 +710,10 @@ def _eye_candidates(rgb: np.ndarray, mask: np.ndarray, profile: Profile) -> list
         aspect = bw / bh
         if aspect < 0.32 or aspect > 3.6:
             continue
+        if landscape_subject:
+            y_norm = (float(y) - subject_y0) / subject_h
+            if y_norm < 0.20 or y_norm > 0.86:
+                continue
 
         region = labels == label
         contours, _ = cv2.findContours(region.astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
@@ -717,7 +773,7 @@ def _eye_lines(rgb: np.ndarray, mask: np.ndarray, profile: Profile) -> list[list
     eyes = _eye_candidates(rgb, mask, profile)
     lines: list[list[Point]] = []
     for cx, cy, radius, _score in eyes:
-        rx = max(6.4, min(22.0, radius * 1.95))
+        rx = max(8.5, min(30.0, radius * 2.35))
         ry = max(2.9, rx * 0.42)
         top = _arc(cx, cy, rx, ry, np.pi, 0.0, 18)
         bottom = _arc(cx, cy, rx, ry, np.pi, 2 * np.pi, 18)
@@ -729,7 +785,7 @@ def _eye_lines(rgb: np.ndarray, mask: np.ndarray, profile: Profile) -> list[list
 def _eye_pupils(rgb: np.ndarray, mask: np.ndarray, profile: Profile) -> list[tuple[float, float, float]]:
     pupils: list[tuple[float, float, float]] = []
     for cx, cy, radius, _score in _eye_candidates(rgb, mask, profile):
-        pupils.append((cx, cy, max(2.0, min(6.2, radius * 0.56))))
+        pupils.append((cx, cy, max(2.6, min(8.0, radius * 0.68))))
     return pupils
 
 

@@ -1,0 +1,17 @@
+{
+  "anatomy": 3,
+  "linework": 3,
+  "notes": "Mantle and arm-crown roughly trace the input pose, but the two prominent extended tentacles are missing and the outline is jagged with noisy stipple rather than clean FAO linework.",
+  "silhouette_match": 5,
+  "specific_issues": [
+    "both long club tentacles from the photo are entirely missing",
+    "mantle/fin outline is jagged and broken rather than a single continuous clean line",
+    "stipple is uniformly scattered noise rather than concentrated chromatophore fields",
+    "no ring suckers depicted on any arms",
+    "stray edge fragments and floating dots clutter the background",
+    "fin shape on the left is rounded/blob-like and lacks the rhomboid fin geometry visible in the photo",
+    "eye is a tiny dot rather than the almond-with-pupil FAO convention",
+    "arm count and arrangement on the right are ambiguous and do not clearly match the photo's visible arms"
+  ],
+  "style_fidelity": 4
+}

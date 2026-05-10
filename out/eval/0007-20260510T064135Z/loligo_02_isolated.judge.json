@@ -1,0 +1,17 @@
+{
+  "anatomy": 2,
+  "linework": 3,
+  "notes": "Output captures the rough horizontal stack of multiple squid bodies but reduces them to traced mantle outlines with noisy photo-trace clutter and effectively no heads, eyes, arms, or suckers.",
+  "silhouette_match": 4,
+  "specific_issues": [
+    "heads/eyes essentially missing on all individuals",
+    "arms and tentacles absent \u2014 no almond eye, no sucker rings",
+    "chromatophore field rendered as scribbly edge-trace artifacts of photo highlights, not sparse stipple",
+    "broken/discontinuous silhouettes where mantles meet head region",
+    "fins not articulated \u2014 terminal fin shape is a flat blunt outline rather than the diamond fin in the photo",
+    "reads as an edge-detector trace of the photo rather than an FAO scientific plate",
+    "only one rudimentary arm cluster visible on the bottom-right squid; other specimens are headless",
+    "internal lines are noise rather than purposeful anatomical hatching"
+  ],
+  "style_fidelity": 3
+}

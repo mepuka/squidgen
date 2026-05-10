@@ -1,0 +1,17 @@
+{
+  "anatomy": 2,
+  "linework": 3,
+  "notes": "Output reads as raw edge-trace fragments of mantle outlines with no eyes, arms, or tentacles, far from an FAO scientific plate.",
+  "silhouette_match": 3,
+  "specific_issues": [
+    "no eyes drawn anywhere despite eyes being clearly visible in the photo",
+    "arms and tentacles entirely missing",
+    "mantle silhouettes are broken and incomplete rather than clean continuous contours",
+    "interior 'detail' is noisy photo-trace clutter, not sparse FAO-style stipple",
+    "no ring suckers, no fin separation indicated",
+    "only partial subset of the four squid in the photo is represented",
+    "head/funnel anatomy absent",
+    "overall reads as edge-detection artifact rather than scientific line drawing"
+  ],
+  "style_fidelity": 2
+}

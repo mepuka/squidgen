@@ -1,0 +1,17 @@
+{
+  "anatomy": 3,
+  "linework": 4,
+  "notes": "Traces both views from the photo but arms fuse into amorphous blobs, individual tentacles are lost, and the eye/sucker detail is missing \u2014 reads as a photo-trace silhouette, not an FAO plate.",
+  "silhouette_match": 4,
+  "specific_issues": [
+    "arms not separated into distinct appendages",
+    "no ring-shaped suckers along arms",
+    "eye on top view missing entirely; bottom-view eye is a tiny indistinct mark",
+    "silhouette wobbles with photo-trace noise rather than clean continuous ink",
+    "stipple is scattered noise rather than concentrated chromatophore fields",
+    "fin shape on top view is distorted and merges into mantle without a clear outline",
+    "tentacular clubs are not articulated as in FAO references",
+    "linework is too thin/wispy and lacks single-weight ink confidence"
+  ],
+  "style_fidelity": 3
+}

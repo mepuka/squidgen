@@ -1,0 +1,18 @@
+{
+  "anatomy": 4,
+  "linework": 2,
+  "notes": "The pose and overall layout track the input photo, but the rendering is a noisy edge-trace rather than clean FAO ink \u2014 broken silhouette, chopped contours, and scattered debris instead of disciplined linework.",
+  "silhouette_match": 6,
+  "specific_issues": [
+    "broken, fragmented outer silhouette instead of single continuous contour",
+    "photo-trace edge noise scattered across body and arms",
+    "no clearly drawn almond eye with filled pupil",
+    "no ring-shaped suckers along the arms or tentacular clubs",
+    "stipple is random speckle, not concentrated chromatophore fields matching the photo",
+    "tentacular club tips lack the distinct paddle/sucker structure visible in the photo",
+    "duplicate parallel edges along arm and fin borders (double-tracing artifact)",
+    "fin-mantle junction broken rather than smooth",
+    "overall reads as edge-detection output, not a scientific plate"
+  ],
+  "style_fidelity": 2
+}
